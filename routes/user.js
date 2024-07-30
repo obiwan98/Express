@@ -34,10 +34,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
  *                 type: string
  *               password:
  *                 type: string
- *               roles:
- *                 type: array
- *                 items:
- *                   type: string
+ *               role:
+ *                 type: string
  *               group:
  *                 type: object
  *                 properties:
@@ -204,7 +202,7 @@ router.get('/', auth, async (req, res) => {
  * @swagger
  * /api/users/{id}:
  *   get:
- *     summary: Get user by ID
+ *     summary: Get user by _id
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -214,7 +212,7 @@ router.get('/', auth, async (req, res) => {
  *         schema:
  *           type: string
  *         required: true
- *         description: User ID
+ *         description: User _id
  *     responses:
  *       200:
  *         description: User data
@@ -241,7 +239,7 @@ router.get('/:id', auth, async (req, res) => {
  * @swagger
  * /api/users/{id}:
  *   put:
- *     summary: Update user by ID
+ *     summary: Update user by _id
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -251,7 +249,7 @@ router.get('/:id', auth, async (req, res) => {
  *         schema:
  *           type: string
  *         required: true
- *         description: User ID
+ *         description: User _id
  *     requestBody:
  *       required: true
  *       content:
@@ -261,10 +259,8 @@ router.get('/:id', auth, async (req, res) => {
  *             properties:
  *               email:
  *                 type: string
- *               roles:
+ *               role:
  *                 type: array
- *                 items:
- *                   type: string
  *               group:
  *                 type: object
  *                 properties:
@@ -325,7 +321,7 @@ router.put('/:id', auth, async (req, res) => {
  * @swagger
  * /api/users/{id}:
  *   delete:
- *     summary: Delete user by ID
+ *     summary: Delete user by _id
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -335,7 +331,7 @@ router.put('/:id', auth, async (req, res) => {
  *         schema:
  *           type: string
  *         required: true
- *         description: User ID
+ *         description: User _id
  *     responses:
  *       200:
  *         description: User deleted successfully
