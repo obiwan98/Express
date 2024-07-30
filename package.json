@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm build",
     "start": "npm start",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm build"
   },
   "keywords": [],
   "author": "",
