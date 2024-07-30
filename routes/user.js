@@ -21,7 +21,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
  * @swagger
  * /api/users/signup:
  *   post:
- *     summary: Create a new user
+ *     summary: 회원가입
  *     tags: [Users]
  *     requestBody:
  *       required: true
