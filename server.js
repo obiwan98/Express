@@ -25,6 +25,10 @@ mongoose.connect(MONGODB_URI, {
 .catch((err) => console.error('MongoDB connection error:', err));
 
 // Swagger 설정
+const LOCAL_URL = process.env.LOCAL_URL;
+const PROD_URL = process.env.PROD_URL;
+const SERVER_URL = process.env.NODE_ENV === 'production' ? PROD_URL : LOCAL_URL;
+
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: '3.0.0',
@@ -35,8 +39,8 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`,
-        description: 'Local server',
+        url: SERVER_URL,
+        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Local server',
       },
     ],
   },
