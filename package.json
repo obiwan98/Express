@@ -5,8 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm build",
-    "start": "npm start",
-    "heroku-postbuild": "npm build"
+    "start": "npm start"
   },
   "keywords": [],
   "author": "",
