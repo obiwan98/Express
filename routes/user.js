@@ -32,19 +32,25 @@ const JWT_SECRET = process.env.JWT_SECRET;
  *             properties:
  *               email:
  *                 type: string
+ *                 example: 'obiwan98@cj.net'
  *               password:
  *                 type: string
+ *                 example: '070404'
  *               role:
  *                 type: string
+ *                 example: 'Admin, TeamLeader, BookManager, Employee 중 택 1'
  *               group:
  *                 type: object
  *                 properties:
  *                   office:
  *                     type: string
+ *                     example : 'DX실'
  *                   part:
  *                     type: string
+ *                     example : 'DX1담당'
  *                   team:
  *                     type: string
+ *                     example : 'CGV팀'
  *     responses:
  *       201:
  *         description: User created successfully
@@ -95,7 +101,7 @@ router.post('/signup', async (req, res) => {
  * @swagger
  * /api/users/login:
  *   post:
- *     summary: User login
+ *     summary: 로그인
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -106,8 +112,10 @@ router.post('/signup', async (req, res) => {
  *             properties:
  *               email:
  *                 type: string
+ *                 example: 'obiwan98@cj.net'
  *               password:
  *                 type: string
+ *                 example: '070404'
  *     responses:
  *       200:
  *         description: Login successful
@@ -146,7 +154,7 @@ router.post('/login', async (req, res) => {
  * @swagger
  * /api/users/me:
  *   get:
- *     summary: Get current user information
+ *     summary: 현재 로그인 회원 정보
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -177,7 +185,7 @@ router.get('/me', auth, async (req, res) => {
  * @swagger
  * /api/users:
  *   get:
- *     summary: Get all users
+ *     summary: 모든 회원 리스트 조회
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -202,7 +210,7 @@ router.get('/', auth, async (req, res) => {
  * @swagger
  * /api/users/{id}:
  *   get:
- *     summary: Get user by _id
+ *     summary: _id로 특정 회원 정보 조회
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -239,7 +247,7 @@ router.get('/:id', auth, async (req, res) => {
  * @swagger
  * /api/users/{id}:
  *   put:
- *     summary: Update user by _id
+ *     summary: _id로 특정 회원 정보 업데이트
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -321,7 +329,7 @@ router.put('/:id', auth, async (req, res) => {
  * @swagger
  * /api/users/{id}:
  *   delete:
- *     summary: Delete user by _id
+ *     summary: _id로 특정 회원 삭제
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []

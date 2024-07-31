@@ -43,6 +43,20 @@ const swaggerOptions = {
         description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Local server',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   apis: ['./routes/*.js'],  // 주석이 포함된 파일 경로
 };
