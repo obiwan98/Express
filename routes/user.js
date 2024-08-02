@@ -38,19 +38,10 @@ const JWT_SECRET = process.env.JWT_SECRET;
  *                 example: '070404'
  *               role:
  *                 type: string
- *                 example: 'Admin, TeamLeader, BookManager, Employee 중 택 1'
+ *                 example: '66a0bbfe8d7e45a08668b311'
  *               group:
- *                 type: object
- *                 properties:
- *                   office:
- *                     type: string
- *                     example : 'DX실'
- *                   part:
- *                     type: string
- *                     example : 'DX1담당'
- *                   team:
- *                     type: string
- *                     example : 'CGV팀'
+ *                 type: string
+ *                 example: '66a0b1bd8d7e45a08668b300'
  *     responses:
  *       201:
  *         description: User created successfully
@@ -62,37 +53,16 @@ router.post('/signup', async (req, res) => {
     const { email, password, role, group } = req.body;
   
     try {
-      // 그룹 찾기 또는 생성
-      let existingGroup = await Group.findOne({
-        office: group.office,
-        part: group.part,
-        team: group.team
-      });
-  
-      if (!existingGroup) {
-        existingGroup = new Group(group);
-        await existingGroup.save();
-      }
-  
-      // 역할 존재 여부 확인
-      const roleDoc = await Role.findOne({ Role: role });
-      if (!roleDoc) {
-        console.error('Role not found:', role);
-        return res.status(400).send({ error: 'Role not found' });
-      }
-      console.log('Role found:', roleDoc);
-  
       // 비밀번호 해싱
       const hashedPassword = await bcrypt.hash(password, 10);
-      console.log(roleDoc._id);
-      const user = new User({ email, password: hashedPassword, role: roleDoc._id, group: existingGroup._id, signupDate: Date.now() });
+      const user = new User({ email, password: hashedPassword, role: role, group: group, signupDate: Date.now() });
   
       // 사용자 저장
       await user.save();
-      res.status(201).send({ message: 'User created successfully' });
+      res.status(201).send({ message: '회원가입이 성공하였습니다' });
     } catch (error) {
       console.error('Error during signup:', error);
-      res.status(400).send({ error: 'Failed to create user' });
+      res.status(400).send({ errorCode : error.code, error: error.errmsg });
     }
 });
 
