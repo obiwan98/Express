@@ -235,19 +235,12 @@ router.get('/:id', auth, async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               email:
- *                 type: string
  *               role:
- *                 type: array
+ *                 type: string
+ *                 example: '66a0bbfe8d7e45a08668b30f'
  *               group:
- *                 type: object
- *                 properties:
- *                   office:
- *                     type: string
- *                   part:
- *                     type: string
- *                   team:
- *                     type: string
+ *                 type: string
+ *                 example: '66a0b1bd8d7e45a08668b2fe'
  *     responses:
  *       200:
  *         description: User updated successfully
