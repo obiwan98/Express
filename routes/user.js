@@ -258,34 +258,17 @@ router.get('/:id', auth, async (req, res) => {
  */
 // 사용자 정보 수정 엔드포인트 (인증 필요)
 router.put('/:id', auth, async (req, res) => {
-  const { email, role, group } = req.body;
+  const { role, group } = req.body;
 
   try {
+    console.log(req.params.id);
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).send({ error: 'User not found' });
     }
 
-    // 그룹 찾기 또는 생성
-    let existingGroup = await Group.findOne({
-      office: group.office,
-      part: group.part,
-      team: group.team
-    });
-
-    if (!existingGroup) {
-      existingGroup = new Group(group);
-      await existingGroup.save();
-    }
-
-    const roleDoc = await Role.findOne({ Role: role});
-    if (!roleDoc) {
-      return res.status(400).send({ error: 'Role not found' });
-    }
-
-    user.email = email;
-    user.role = roleDoc._id;
-    user.group = existingGroup._id;
+    user.role = role;
+    user.group = group;
 
     await user.save();
     res.status(200).send({ message: 'User updated successfully' });
