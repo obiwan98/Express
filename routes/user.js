@@ -1,11 +1,11 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const Role = require('../models/role');
-const Group = require('../models/group');
-const auth = require('../middlewares/auth');
-require('dotenv').config();
+const express = require("express");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const Role = require("../models/role");
+const Group = require("../models/group");
+const auth = require("../middlewares/auth");
+require("dotenv").config();
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -49,23 +49,28 @@ const JWT_SECRET = process.env.JWT_SECRET;
  *         description: Failed to create user
  */
 // 회원가입 엔드포인트
-router.post('/signup', async (req, res) => {
-    const { email, password, role, group } = req.body;
-  
-    try {
-      // 비밀번호 해싱
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const user = new User({ email, password: hashedPassword, role: role, group: group, signupDate: Date.now() });
-  
-      // 사용자 저장
-      await user.save();
-      res.status(201).send({ message: '회원가입이 성공하였습니다' });
-    } catch (error) {
-      console.error('Error during signup:', error);
-      res.status(400).send({ errorCode : error.code, error: error.errmsg });
-    }
-});
+router.post("/signup", async (req, res) => {
+  const { email, password, role, group } = req.body;
 
+  try {
+    // 비밀번호 해싱
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      email,
+      password: hashedPassword,
+      role: role,
+      group: group,
+      signupDate: Date.now(),
+    });
+
+    // 사용자 저장
+    await user.save();
+    res.status(201).send({ message: "회원가입이 성공하였습니다" });
+  } catch (error) {
+    console.error("Error during signup:", error);
+    res.status(400).send({ errorCode: error.code, error: error.errmsg });
+  }
+});
 
 /**
  * @swagger
@@ -96,27 +101,33 @@ router.post('/signup', async (req, res) => {
  */
 
 // 로그인 엔드포인트
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email }).populate('group').populate('role');
+    const user = await User.findOne({ email })
+      .populate("group")
+      .populate("role");
     if (!user) {
-      console.error('User not found:', email);
-      return res.status(400).send({ error: 'Invalid email or password' });
+      console.error("User not found:", email);
+      return res.status(400).send({ error: "Invalid email or password" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      console.error('Invalid password for user:', email);
-      return res.status(400).send({ error: 'Invalid email or password' });
+      console.error("Invalid password for user:", email);
+      return res.status(400).send({ error: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ email: user.email, role: user.role, group: user.group }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { email: user.email, role: user.role, group: user.group },
+      JWT_SECRET,
+      { expiresIn: "1h" }
+    );
     res.status(200).send({ token });
   } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    console.error("Error during login:", error);
+    res.status(500).send({ error: "Internal server error" });
   }
 });
 
@@ -137,17 +148,19 @@ router.post('/login', async (req, res) => {
  *         description: Internal server error
  */
 // 사용자 정보 조회 엔드포인트 (인증 필요)
-router.get('/me', auth, async (req, res) => {
+router.get("/me", auth, async (req, res) => {
   try {
-    console.log('Request user:', req.email);  // 디버깅 로그 추가
-    const user = await User.findOne({ email: req.email }).populate('group').populate('role');
+    console.log("Request user:", req.email); // 디버깅 로그 추가
+    const user = await User.findOne({ email: req.email })
+      .populate("group")
+      .populate("role");
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "User not found" });
     }
     res.status(200).send(user);
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    console.error("Error fetching user data:", error);
+    res.status(500).send({ error: "Internal server error" });
   }
 });
 
@@ -166,13 +179,13 @@ router.get('/me', auth, async (req, res) => {
  *         description: Internal server error
  */
 // 모든 사용자 목록 조회 엔드포인트 (인증 필요, 관리자만)
-router.get('/', auth, async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
-    const users = await User.find().populate('group').populate('role');
+    const users = await User.find().populate("group").populate("role");
     res.status(200).send(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    console.error("Error fetching users:", error);
+    res.status(500).send({ error: "Internal server error" });
   }
 });
 
@@ -200,16 +213,18 @@ router.get('/', auth, async (req, res) => {
  *         description: Internal server error
  */
 // 특정 사용자 정보 조회 엔드포인트 (인증 필요)
-router.get('/:id', auth, async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).populate('group').populate('role');
+    const user = await User.findById(req.params.id)
+      .populate("group")
+      .populate("role");
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "User not found" });
     }
     res.status(200).send(user);
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    console.error("Error fetching user data:", error);
+    res.status(500).send({ error: "Internal server error" });
   }
 });
 
@@ -250,24 +265,24 @@ router.get('/:id', auth, async (req, res) => {
  *         description: User not found
  */
 // 사용자 정보 수정 엔드포인트 (인증 필요)
-router.put('/:id', auth, async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const { role, group } = req.body;
 
   try {
     console.log(req.params.id);
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "User not found" });
     }
 
     user.role = role;
     user.group = group;
 
     await user.save();
-    res.status(200).send({ message: 'User updated successfully' });
+    res.status(200).send({ message: "User updated successfully" });
   } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(400).send({ error: 'Failed to update user' });
+    console.error("Error updating user:", error);
+    res.status(400).send({ error: "Failed to update user" });
   }
 });
 
@@ -295,16 +310,16 @@ router.put('/:id', auth, async (req, res) => {
  *         description: Internal server error
  */
 // 사용자 삭제 엔드포인트 (인증 필요)
-router.delete('/:id', auth, async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "User not found" });
     }
-    res.status(200).send({ message: 'User deleted successfully' });
+    res.status(200).send({ message: "User deleted successfully" });
   } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    console.error("Error deleting user:", error);
+    res.status(500).send({ error: "Internal server error" });
   }
 });
 
