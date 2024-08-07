@@ -2,91 +2,50 @@ const express = require('express');
 const Book = require('../models/book');
 const Group = require('../models/group');
 const auth = require('../middlewares/auth');
+const axios = require('axios');
 const router = express.Router();
 
-// 도서 목록 조회 (인증 필요)
-router.get('/', auth, async (req, res) => {
+const ALADIN_API_URL = 'https://www.aladin.co.kr/ttb/api/ItemSearch.aspx';
+const TTB_KEY = 'ttbfunkholics1613001';
+
+// 도서 검색 API 라우터
+router.get('/aladinSearch', auth, async (req, res) => {
+  const { query, queryType = 'Keyword', maxResults = 10, start = 1 } = req.query;
+
+  if (!query) {
+    return res.status(400).json({ error: '검색어(제목 또는 저자)를 입력해주세요.' });
+  }
+
   try {
-    const books = await Book.find().populate('group');
-    res.status(200).send(books);
+    const response = await axios.get(ALADIN_API_URL, {
+      params: {
+        ttbkey: TTB_KEY,
+        Query: query,
+        QueryType: queryType,
+        MaxResults: maxResults,
+        start: start,
+        SearchTarget: 'Book',
+        output: 'js', // JSON 형식으로 출력
+        Version: '20131101',
+      },
+    });
+
+    // 응답에서 필요한 데이터 추출
+    const books = response.data.item.map((item) => ({
+      title: item.title,
+      author: item.author,
+      publisher: item.publisher,
+      pubDate: item.pubDate,
+      description: item.description,
+      cover: item.cover,
+      isbn13: item.isbn13,
+      link: item.link,
+    }));
+
+    res.status(200).json(books);
   } catch (error) {
     console.error('Error fetching books:', error);
-    res.status(500).send({ error: 'Internal server error' });
-  }
-});
-
-// 특정 도서 조회 (인증 필요)
-router.get('/:id', auth, async (req, res) => {
-  try {
-    const book = await Book.findById(req.params.id).populate('group');
-    if (!book) {
-      return res.status(404).send({ error: 'Book not found' });
-    }
-    res.status(200).send(book);
-  } catch (error) {
-    console.error('Error fetching book:', error);
-    res.status(500).send({ error: 'Internal server error' });
-  }
-});
-
-// 도서 추가 (인증 필요)
-router.post('/', auth, async (req, res) => {
-  const { title, author, publisher, group } = req.body;
-
-  try {
-    const existingGroup = await Group.findById(group);
-    if (!existingGroup) {
-      return res.status(400).send({ error: 'Group not found' });
-    }
-
-    const book = new Book({ title, author, publisher, group: existingGroup._id });
-    await book.save();
-    res.status(201).send({ message: 'Book created successfully' });
-  } catch (error) {
-    console.error('Error creating book:', error);
-    res.status(400).send({ error: 'Failed to create book' });
-  }
-});
-
-// 도서 수정 (인증 필요)
-router.put('/:id', auth, async (req, res) => {
-  const { title, author, publisher, group } = req.body;
-
-  try {
-    const book = await Book.findById(req.params.id);
-    if (!book) {
-      return res.status(404).send({ error: 'Book not found' });
-    }
-
-    const existingGroup = await Group.findById(group);
-    if (!existingGroup) {
-      return res.status(400).send({ error: 'Group not found' });
-    }
-
-    book.title = title;
-    book.author = author;
-    book.publisher = publisher;
-    book.group = existingGroup._id;
-
-    await book.save();
-    res.status(200).send({ message: 'Book updated successfully' });
-  } catch (error) {
-    console.error('Error updating book:', error);
-    res.status(400).send({ error: 'Failed to update book' });
-  }
-});
-
-// 도서 삭제 (인증 필요)
-router.delete('/:id', auth, async (req, res) => {
-  try {
-    const book = await Book.findByIdAndDelete(req.params.id);
-    if (!book) {
-      return res.status(404).send({ error: 'Book not found' });
-    }
-    res.status(200).send({ message: 'Book deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting book:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
