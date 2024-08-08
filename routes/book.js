@@ -8,8 +8,38 @@ const router = express.Router();
 const ALADIN_API_URL = 'https://www.aladin.co.kr/ttb/api/ItemSearch.aspx';
 const TTB_KEY = 'ttbfunkholics1613001';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Books
+ *   description: Book management
+ */
+
+/**
+ * @swagger
+ * /api/books/aladinSearch:
+ *   get:
+ *     summary: aladin api 검색
+ *     tags: [Books]
+ *     parameters:
+ *       - in: path
+ *         name: query
+ *         schema:
+ *           type: string
+ *           example : 'java'
+ *         required: true
+ *         description: 검색어
+ *     responses:
+ *       200:
+ *         description: search successful
+ *       400:
+ *         description: Invalid query
+ *       500:
+ *         description: Internal server error
+ */
+
 // 도서 검색 API 라우터
-router.get('/aladinSearch', auth, async (req, res) => {
+router.get('/aladinSearch', async (req, res) => {
   const { query, queryType = 'Keyword', maxResults = 10, start = 1 } = req.query;
 
   if (!query) {
