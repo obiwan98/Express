@@ -13,7 +13,7 @@ const TTB_KEY = 'ttbfunkholics1613001';
  * @swagger
  * tags:
  *   name: Books
- *   description: Book management
+ *   description: Book management 
  */
 
 /**
