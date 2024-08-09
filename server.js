@@ -25,7 +25,7 @@ mongoose.connect(MONGODB_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch((err) => console.error('MongoDB connection error:', err));
 
-// Swagger 설정
+// Swagger 설정1
 const LOCAL_URL = process.env.LOCAL_URL;
 const PROD_URL = process.env.PROD_URL;
 const SERVER_URL = process.env.NODE_ENV === 'production' ? PROD_URL : LOCAL_URL;
