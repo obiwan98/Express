@@ -10,6 +10,7 @@ const userRoutes = require('./routes/user');
 const roleRoutes = require('./routes/role');
 const groupRoutes = require('./routes/group');
 const bookRoutes = require('./routes/book');
+const mailSenderRoutes = require('./routes/mailSender');
 
 const app = express();
 app.use(bodyParser.json());
@@ -68,6 +69,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/books', bookRoutes);
+app.use('/api', mailSenderRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
