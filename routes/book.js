@@ -46,7 +46,7 @@ const TTB_KEY = 'ttbfunkholics1613001';
  *       400:
  *         description: Invalid query
  *       500:
- *         description: Internal server error1111111
+ *         description: Internal server error111111122
  */
 
 // 도서 검색 API 라우터
