@@ -150,7 +150,6 @@ router.post("/login", async (req, res) => {
 // 사용자 정보 조회 엔드포인트 (인증 필요)
 router.get("/me", auth, async (req, res) => {
   try {
-    console.log("Request user:", req.email); // 디버깅 로그 추가
     const user = await User.findOne({ email: req.email })
       .populate("group")
       .populate("role");

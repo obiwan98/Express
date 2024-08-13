@@ -10,6 +10,7 @@ const userRoutes = require('./routes/user');
 const roleRoutes = require('./routes/role');
 const groupRoutes = require('./routes/group');
 const bookRoutes = require('./routes/book');
+const externalApiRoutes = require('./routes/externalApi');
 const mailSenderRoutes = require('./routes/mailSender');
 
 const app = express();
@@ -69,6 +70,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/groups', groupRoutes);
 app.use('/api/books', bookRoutes);
+app.use('/api/external', externalApiRoutes);
 app.use('/api', mailSenderRoutes);
 
 app.listen(PORT, () => {
