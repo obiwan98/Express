@@ -50,13 +50,14 @@ const JWT_SECRET = process.env.JWT_SECRET;
  */
 // 회원가입 엔드포인트
 router.post("/signup", async (req, res) => {
-  const { email, password, role, group } = req.body;
+  const { email, name, password, role, group } = req.body;
 
   try {
     // 비밀번호 해싱
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       email,
+      name,
       password: hashedPassword,
       role: role,
       group: group,
@@ -120,7 +121,7 @@ router.post("/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { email: user.email, role: user.role, group: user.group },
+      { email: user.email, name: user.name, role: user.role, group: user.group },
       JWT_SECRET,
       { expiresIn: "1h" }
     );

@@ -248,7 +248,7 @@ router.post('/aladinList', async (req, res) => {
   }
 });
 
-// 카테고리 목록 조회
+// 태그 목록 조회
 router.get('/aladinTag', async (req, res) => {
   try {
     const tags = await Tag.find();
