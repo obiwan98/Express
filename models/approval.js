@@ -8,12 +8,14 @@ const approvalBookSchema = new mongoose.Schema({
 
 const approvalConfirmSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  group: { type: mongoose.Schema.Types.ObjectId, ref: "Group", required: true },
   date: { type: Date, required: false },
   comment: { type: String, required: false },
 });
 
 const approvalPaymentSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  group: { type: mongoose.Schema.Types.ObjectId, ref: "Group", required: true },
   receiptInfo: { type: String, required: false },
   receiptImgUrl: { type: String, required: true },
   price: { type: Int32Array, required: true },
@@ -29,9 +31,9 @@ const approvalSchema = new mongoose.Schema({
   state: { type: String, required: true },
   confirm: [approvalConfirmSchema],
   payment: [approvalPaymentSchema],
-  group: { type: mongoose.Schema.Types.ObjectId, ref: "Group", required: true },
-  registDate: { type: Date, default: Date.now },
-  count: { type: Number, default: 0 },
 });
 
-module.exports = mongoose.model("Approval", approvalSchema);
+module.exports.Approval = mongoose.model("Approval", approvalSchema);
+module.exports.Payment = mongoose.model("Payment", approvalPaymentSchema);
+module.exports.Book = mongoose.model("Book", approvalBookSchema);
+module.exports.Confirm = mongoose.model("Confirm", approvalConfirmSchema);
