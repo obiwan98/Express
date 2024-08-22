@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 const approvalBookSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  price: { type: Int32Array, required: true },
+  price: { type: Number, required: true },
 });
 
 const approvalConfirmSchema = new mongoose.Schema({
@@ -18,7 +18,7 @@ const approvalPaymentSchema = new mongoose.Schema({
   group: { type: mongoose.Schema.Types.ObjectId, ref: "Group", required: true },
   receiptInfo: { type: String, required: false },
   receiptImgUrl: { type: String, required: true },
-  price: { type: Int32Array, required: true },
+  price: { type: Number, required: true },
   date: { type: Date, required: false },
 });
 
