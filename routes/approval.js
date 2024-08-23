@@ -1,5 +1,6 @@
 const express = require("express");
-const { Approval, Book, Payment, Confirm } = require("../models/approval");
+// const { Approval, Book, Payment, Confirm } = require("../models/approval");
+const Approval = require("../models/approval");
 const User = require("../models/user");
 const Group = require("../models/group");
 const auth = require("../middlewares/auth");
@@ -8,34 +9,35 @@ const router = express.Router();
 
 router.post("/test", async (req, res) => {
   // const { email, name, password, role, group } = req.body;
-  const user = User.findOne({ email: "yeol2011@cj.net" });
-  const group = user.populate("group");
-
+  const user = await User.findOne({ email: "yeol2011@cj.net" }).populate(
+    "group"
+  );
+  console.log(user);
   try {
     const approval = new Approval({
-      user: user,
-      group: group,
-      book: new Book({
+      user: user._id,
+      group: user.group._id,
+      book: {
         name: "리액트마스터1",
         price: 15000,
-      }),
+      },
       comment: "도서요청해요1",
       regdate: Date.now(),
       state: "0",
-      confirm: new Confirm({
-        user: user,
-        group: group,
+      confirm: {
+        user: user._id,
+        group: user.group._id,
         date: Date.now(),
         comment: "승인합니다.",
-      }),
-      payment: new Payment({
-        user: user,
-        group: group,
+      },
+      payment: {
+        user: user._id,
+        group: user.group._id,
         receiptInfo: "영수증정보입니다.",
         receiptImgUrl: "aa",
         price: 15000,
         date: Date.now(),
-      }),
+      },
     });
 
     // 사용자 저장
