@@ -49,7 +49,21 @@ const JWT_SECRET = process.env.JWT_SECRET;
  *         description: Failed to create user
  */
 // 회원가입 엔드포인트
-router.post("/signup", async (req, res) => {
+router.post("/api/users/signup", async (req, res) => {
+  // #swagger.tags = ['Users']
+  // #swagger.summary = '회원가입'
+  /* #swagger.requestBody = {
+      required: true,
+        content: {
+          "application/json": {
+          schema: { $ref: "#/components/schemas/userSignupExample" },
+            example: { 
+              $ref: "#/components/examples/userSignupExample"
+            }
+          }
+        }
+      }
+  */
   const { email, name, password, role, group } = req.body;
 
   try {
@@ -102,7 +116,21 @@ router.post("/signup", async (req, res) => {
  */
 
 // 로그인 엔드포인트
-router.post("/login", async (req, res) => {
+router.post("/api/users/login", async (req, res) => {
+  // #swagger.tags = ['Users']
+  // #swagger.summary = '로그인'
+  /* #swagger.requestBody = {
+      required: true,
+        content: {
+          "application/json": {
+          schema: { $ref: "#/components/schemas/userLoginExample" },
+            example: { 
+              $ref: "#/components/examples/userLoginExample"
+            }
+          }
+        }
+      }
+  */
   const { email, password } = req.body;
 
   try {
@@ -149,7 +177,9 @@ router.post("/login", async (req, res) => {
  *         description: Internal server error
  */
 // 사용자 정보 조회 엔드포인트 (인증 필요)
-router.get("/me", auth, async (req, res) => {
+router.get("/api/users/me", auth, async (req, res) => {
+  // #swagger.tags = ['Users']
+  // #swagger.summary = '현재 로그인 회원 정보'
   try {
     const user = await User.findOne({ email: req.email })
       .populate("group")
@@ -179,7 +209,9 @@ router.get("/me", auth, async (req, res) => {
  *         description: Internal server error
  */
 // 모든 사용자 목록 조회 엔드포인트 (인증 필요, 관리자만)
-router.get("/", auth, async (req, res) => {
+router.get("/api/users/", auth, async (req, res) => {
+  // #swagger.tags = ['Users']
+  // #swagger.summary = '모든 회원 리스트 조회'
   try {
     const users = await User.find().populate("group").populate("role");
     res.status(200).send(users);
@@ -213,7 +245,10 @@ router.get("/", auth, async (req, res) => {
  *         description: Internal server error
  */
 // 특정 사용자 정보 조회 엔드포인트 (인증 필요)
-router.get("/:id", auth, async (req, res) => {
+router.get("/api/users/:id", auth, async (req, res) => {
+  // #swagger.tags = ['Users']
+  // #swagger.summary = '_id로 특정 회원 정보 조회'
+
   try {
     const user = await User.findById(req.params.id)
       .populate("group")
@@ -265,7 +300,9 @@ router.get("/:id", auth, async (req, res) => {
  *         description: User not found
  */
 // 사용자 정보 수정 엔드포인트 (인증 필요)
-router.put("/:id", auth, async (req, res) => {
+router.put("/api/users/:id", auth, async (req, res) => {
+  // #swagger.tags = ['Users']
+  // #swagger.summary = '_id로 특정 회원 정보 업데이트'
   const { role, group } = req.body;
 
   try {
@@ -310,7 +347,9 @@ router.put("/:id", auth, async (req, res) => {
  *         description: Internal server error
  */
 // 사용자 삭제 엔드포인트 (인증 필요)
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/api/users/:id", auth, async (req, res) => {
+  // #swagger.tags = ['Users']
+  // #swagger.summary = '_id로 특정 회원 삭제'
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
