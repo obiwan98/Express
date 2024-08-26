@@ -2,12 +2,13 @@ const express = require("express");
 // const { Approval, Book, Payment, Confirm } = require("../models/approval");
 const Approval = require("../models/approval");
 const User = require("../models/user");
-const Group = require("../models/group");
 const auth = require("../middlewares/auth");
 const axios = require("axios");
 const router = express.Router();
 
-router.post("/test", async (req, res) => {
+router.post("api/approvals/test", async (req, res) => {
+  // #swagger.tags = ['Approvals']
+  // #swagger.summary = 'test'
   // const { email, name, password, role, group } = req.body;
   const user = await User.findOne({ email: "yeol2011@cj.net" }).populate(
     "group"

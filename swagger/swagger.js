@@ -14,9 +14,9 @@ console.log(SERVER_URL);
 const doc = {
     
     info: {
-      title: "API Documentation",
+      title: "BSS API",
       version: "1.0.0",
-      description: "API Documentation with Swagger",
+      description: "BSS에서 사용되는 API 테스트 문서",
     },
     servers: [
       {
@@ -34,22 +34,6 @@ const doc = {
           scheme: "bearer",
           bearerFormat: "JWT",
         },
-      },
-      examples : {
-        userSignupExample : {
-          value : {
-            email: 'obiwan98@cj.net',
-            password: '070404',
-            role: '66a0bbfe8d7e45a08668b311',
-            group: '66a0b1bd8d7e45a08668b300'
-          }
-        },
-        userLoginExample : {
-          value : {
-            email: 'obiwan98@cj.net',
-            password: '070404'
-          }
-        }
       }
     },
     security: [

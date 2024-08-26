@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API Documentation",
+    "title": "BSS API",
     "version": "1.0.0",
-    "description": "API Documentation with Swagger"
+    "description": "BSS에서 사용되는 API 테스트 문서"
   },
   "servers": [
     {
@@ -12,8 +12,12 @@
     }
   ],
   "paths": {
-    "/test": {
+    "api/approvals/test": {
       "post": {
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "test",
         "description": "",
         "responses": {
           "201": {
@@ -28,7 +32,7 @@
     "/api/external/aladinSearch": {
       "post": {
         "tags": [
-          "external"
+          "External"
         ],
         "summary": "aladin api Search - 검색어로 검색(제목, 작가)",
         "description": "",
@@ -47,22 +51,20 @@
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "query": {
-                    "example": "any"
-                  },
-                  "queryType": {
-                    "example": "any"
+                    "example": "java"
                   },
                   "maxResults": {
-                    "example": "any"
+                    "example": 10
                   },
                   "start": {
-                    "example": "any"
+                    "example": 1
                   }
                 }
               }
@@ -74,7 +76,7 @@
     "/api/external/aladinLookUp": {
       "post": {
         "tags": [
-          "external"
+          "External"
         ],
         "summary": "aladin api LookUp - ISBN 코드번호로 검색",
         "description": "",
@@ -93,13 +95,14 @@
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "ItemId": {
-                    "example": "any"
+                    "example": "9788931477139"
                   }
                 }
               }
@@ -111,7 +114,7 @@
     "/api/external/aladinList": {
       "post": {
         "tags": [
-          "external"
+          "External"
         ],
         "summary": "aladin api List - 카테고리로 검색",
         "description": "",
@@ -130,22 +133,20 @@
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "categoryId": {
-                    "example": "any"
-                  },
-                  "queryType": {
-                    "example": "any"
+                    "example": "437"
                   },
                   "maxResults": {
-                    "example": "any"
+                    "example": 10
                   },
                   "start": {
-                    "example": "any"
+                    "example": 1
                   }
                 }
               }
@@ -157,7 +158,7 @@
     "/api/external/aladinTag": {
       "get": {
         "tags": [
-          "external"
+          "External"
         ],
         "summary": "태그 목록 조회",
         "description": "",
@@ -171,21 +172,12 @@
         }
       }
     },
-    "/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/send-email": {
+    "/api/send-email": {
       "post": {
+        "tags": [
+          "Mail"
+        ],
+        "summary": "이메일 보내기",
         "description": "",
         "responses": {
           "200": {
@@ -243,10 +235,24 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/userSignupExample"
-              },
-              "example": {
-                "$ref": "#/components/examples/userSignupExample"
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "obiwan98@cj.net"
+                  },
+                  "name": {
+                    "example": "박광연"
+                  },
+                  "password": {
+                    "example": "070404"
+                  },
+                  "role": {
+                    "example": "66a0bbfe8d7e45a08668b311"
+                  },
+                  "group": {
+                    "example": "66a0b1bd8d7e45a08668b300"
+                  }
+                }
               }
             }
           }
@@ -276,10 +282,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/userLoginExample"
-              },
-              "example": {
-                "$ref": "#/components/examples/userLoginExample"
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "obiwan98@cj.net"
+                  },
+                  "password": {
+                    "example": "070404"
+                  }
+                }
               }
             }
           }
@@ -380,16 +391,17 @@
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "role": {
-                    "example": "any"
+                    "example": "66a0bbfe8d7e45a08668b311"
                   },
                   "group": {
-                    "example": "any"
+                    "example": "66a0b1bd8d7e45a08668b300"
                   }
                 }
               }
@@ -425,6 +437,40 @@
           }
         }
       }
+    },
+    "/api/roles": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "User 역할 목록 조회",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/groups": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "User 그룹 목록 조회",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -433,22 +479,6 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
-      }
-    },
-    "examples": {
-      "userSignupExample": {
-        "value": {
-          "email": "obiwan98@cj.net",
-          "password": "070404",
-          "role": "66a0bbfe8d7e45a08668b311",
-          "group": "66a0b1bd8d7e45a08668b300"
-        }
-      },
-      "userLoginExample": {
-        "value": {
-          "email": "obiwan98@cj.net",
-          "password": "070404"
-        }
       }
     }
   },

@@ -7,8 +7,6 @@ const swaggerUi = require("swagger-ui-express");
 require("dotenv").config();
 
 const userRoutes = require("./routes/user");
-const roleRoutes = require("./routes/role");
-const groupRoutes = require("./routes/group");
 const bookRoutes = require("./routes/book");
 const approvalRoutes = require("./routes/approval");
 const externalApiRoutes = require("./routes/externalApi");
@@ -36,13 +34,11 @@ mongoose
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 //app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use("/api/users", userRoutes);
-app.use("/api/roles", roleRoutes);
-app.use("/api/groups", groupRoutes);
-app.use("/api/books", bookRoutes);
-app.use("/api/approvals", approvalRoutes);
-app.use("/api/external", externalApiRoutes);
-app.use("/api", mailSenderRoutes);
+app.use("/", userRoutes);
+app.use("/", bookRoutes);
+app.use("/", approvalRoutes);
+app.use("/", externalApiRoutes);
+app.use("/", mailSenderRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
