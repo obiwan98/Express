@@ -8,48 +8,31 @@ const ALADIN_API_LOOKUP_URL = 'https://www.aladin.co.kr/ttb/api/ItemLookUp.aspx'
 const ALADIN_API_LIST_URL = 'https://www.aladin.co.kr/ttb/api/ItemList.aspx';
 const TTB_KEY = 'ttbfunkholics1613001';
 
-/**
- * @swagger
- * tags:
- *   name: External
- *   description: Book management
- */
-
-/**
- * @swagger
- * /api/external/aladinSearch:
- *   post:
- *     summary: aladin api Search - 검색어로 검색(제목, 작가)
- *     tags: [External]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               query:
- *                 type: string
- *                 example: 'java'
- *               maxResults:
- *                 type: string
- *                 example: '10'
- *               start:
- *                 type: string
- *                 example: '1'
- *             required:
- *               - query
- *     responses:
- *       200:
- *         description: search successful
- *       400:
- *         description: Invalid query
- *       500:
- *         description: Internal server error
- */
-
-// 도서 검색 API 라우터
-router.post('/aladinSearch', async (req, res) => {
+router.post('/api/external/aladinSearch', async (req, res) => {
+  // #swagger.tags = ['External']
+  // #swagger.summary = 'aladin api Search - 검색어로 검색(제목, 작가)'
+  /* #swagger.requestBody = {
+        required: true,
+        content: {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "example": "java"
+                },
+                "maxResults": {
+                  "example": 10
+                },
+                "start": {
+                  "example": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    */
   const { query, queryType = 'Keyword', maxResults = 10, start = 1 } = req.body;
 
   if (!query) {
@@ -96,33 +79,25 @@ router.post('/aladinSearch', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/external/aladinLookUp:
- *   post:
- *     summary: aladin api LookUp - ISBN 코드번호로 검색
- *     tags: [External]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               ItemId:
- *                 type: string
- *                 example: '9788931477139'
- *     responses:
- *       200:
- *         description: lookUp successful
- *       400:
- *         description: Invalid query
- *       500:
- *         description: Internal server error
- */
-
-// 도서 검색 API 라우터 ttbkey=ttbfunkholics1613001&itemIdType=ISBN&ItemId=9788965138068&output=js&Version=20131101
-router.post('/aladinLookUp', async (req, res) => {
+router.post('/api/external/aladinLookUp', async (req, res) => {
+  // #swagger.tags = ['External']
+  // #swagger.summary = 'aladin api LookUp - ISBN 코드번호로 검색'
+  /* #swagger.requestBody = {
+        required: true,
+        content: {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ItemId": {
+                  "example": "9788931477139"
+                }
+              }
+            }
+          }
+        }
+      }
+    */
   const { ItemId } = req.body;
 
   if (!ItemId) {
@@ -166,42 +141,31 @@ router.post('/aladinLookUp', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/external/aladinList:
- *   post:
- *     summary: aladin api List - 카테고리로 검색
- *     tags: [External]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               categoryId:
- *                 type: string
- *                 example: '437'
- *               maxResults:
- *                 type: string
- *                 example: '10'
- *               start:
- *                 type: string
- *                 example: '1'
- *             required:
- *               - query
- *     responses:
- *       200:
- *         description: Get List successful
- *       400:
- *         description: Invalid query
- *       500:
- *         description: Internal server error
- */
-
-// 도서 리스트 조회 API 라우터
-//QueryType=ItemNewSpecial&CategoryId=387
-router.post('/aladinList', async (req, res) => {
+router.post('/api/external/aladinList', async (req, res) => {
+  // #swagger.tags = ['External']
+  // #swagger.summary = 'aladin api List - 카테고리로 검색'
+  /* #swagger.requestBody = {
+        required: true,
+        content: {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "example": "437"
+                },
+                "maxResults": {
+                  "example": 10
+                },
+                "start": {
+                  "example": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    */
   const { categoryId, queryType = 'ItemNewSpecial', maxResults = 10, start = 1 } = req.body;
 
   if (!categoryId) {
@@ -249,7 +213,9 @@ router.post('/aladinList', async (req, res) => {
 });
 
 // 태그 목록 조회
-router.get('/aladinTag', async (req, res) => {
+router.get('/api/external/aladinTag', async (req, res) => {
+  // #swagger.tags = ['External']
+  // #swagger.summary = '태그 목록 조회'
   try {
     const tags = await Tag.find();
     res.status(200).send(tags);

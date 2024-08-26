@@ -6,7 +6,7 @@ const auth = require('../middlewares/auth');
 const axios = require('axios');
 const router = express.Router();
 
-router.get('/list/:state', auth, async (req, res) => {
+router.get('api/approvals/list/:state', auth, async (req, res) => {
   try {
     const approvals = await Approval.find({
       state: req.params.state,
@@ -26,7 +26,7 @@ router.get('/list/:state', auth, async (req, res) => {
   }
 });
 
-router.post('/test', async (req, res) => {
+router.post('api/approvals/test', async (req, res) => {
   try {
     const user = await User.findOne({ email: 'yeol2011@cj.net' }).populate(
       'group'
