@@ -1,12 +1,12 @@
 const express = require('express');
 const Approval = require('../models/approval');
 const User = require('../models/user');
-const Group = require('../models/group');
 const auth = require('../middlewares/auth');
 const axios = require('axios');
 const router = express.Router();
 
-router.get('api/approvals/list/:state', auth, async (req, res) => {
+//승인관리 리스트
+router.get('/api/approvals/list/:state', auth, async (req, res) => {
   try {
     const approvals = await Approval.find({
       state: req.params.state,
@@ -26,7 +26,8 @@ router.get('api/approvals/list/:state', auth, async (req, res) => {
   }
 });
 
-router.post('api/approvals/test', async (req, res) => {
+//승인컬렉션 테스트 데이터 입력
+router.post('/api/approvals/test', async (req, res) => {
   try {
     const user = await User.findOne({ email: 'yeol2011@cj.net' }).populate(
       'group'
@@ -66,5 +67,9 @@ router.post('api/approvals/test', async (req, res) => {
     res.status(400).send({ errorCode: error.code, error: error.errmsg });
   }
 });
+
+//승인관리(최슬범님)
+
+//승인관리(신혜경님)
 
 module.exports = router;
