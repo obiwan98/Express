@@ -62,13 +62,15 @@ router.post('/api/external/aladinSearch', async (req, res) => {
     // 응답에서 필요한 데이터 추출
     const books = items.map((item) => ({
       title: item.title,
+      link: item.link,
       author: item.author,
-      publisher: item.publisher,
       pubDate: item.pubDate,
       description: item.description,
-      cover: item.cover,
+      isbn: item.isbn,
       isbn13: item.isbn13,
-      link: item.link,
+      priceSales: item.priceSales,
+      cover: item.cover,
+      publisher: item.publisher,
     }));
 
     res.status(200).json(books);
