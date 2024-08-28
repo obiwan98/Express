@@ -17,7 +17,8 @@ router.get('/api/approvals/list/:state', auth, async (req, res) => {
       .populate('confirm.user', 'email name password signupDate')
       .populate('confirm.group')
       .populate('payment.user', 'email name password signupDate')
-      .populate('payment.group');
+      .populate('payment.group')
+      .sort({ regdate: 1 });
 
     res.status(200).send(approvals);
   } catch (error) {
@@ -69,7 +70,7 @@ router.post('/api/approvals/test', async (req, res) => {
 });
 
 //승인관리(최슬범님)
-// 승인 전체 조회
+// 승인 전체 조회 TEST
 router.get('/api/approvals', async (req, res) => {
   try {
     const approvals = await Approval.find();
@@ -81,7 +82,7 @@ router.get('/api/approvals', async (req, res) => {
   }
 });
 
-// 승인 요청(신규)
+// 승인 요청(신규) TEST
 router.post('/api/approvals/pending', async (req, res) => {
   try {
     const { reqItems, etc } = req.body.data;
