@@ -70,20 +70,8 @@ router.post('/api/approvals/test', async (req, res) => {
 });
 
 //승인관리(최슬범님)
-// 승인 전체 조회 TEST
-router.get('/api/approvals', async (req, res) => {
-  try {
-    const approvals = await Approval.find();
-    console.log(approvals);
-    res.status(200).send(approvals);
-  } catch (error) {
-    console.error('Error fetching approvals:', error);
-    res.status(500).send({ error: 'Internal server error' });
-  }
-});
-
 // 승인 요청(신규) TEST
-router.post('/api/approvals/pending', async (req, res) => {
+router.post('/api/approvals/save', async (req, res) => {
   try {
     const { reqItems, etc } = req.body.data;
 
@@ -103,7 +91,7 @@ router.post('/api/approvals/pending', async (req, res) => {
       user: user._id,
       group: user.group._id,
       book: {
-        name: null,
+        name: JSON.parse(getValueByKey(reqItems, 'bookinfo')).bookName,
         price: null,
       },
       comment: itemComment,
@@ -130,6 +118,20 @@ router.post('/api/approvals/pending', async (req, res) => {
   } catch (error) {
     console.error('Error during pending:', error);
     res.status(400).send({ errorCode: error.code, error: error.errmsg });
+  }
+});
+
+// 삭제 TEST
+router.delete('/api/approvals/:id', auth, async (req, res) => {
+  try {
+    const approval = await Approval.findByIdAndDelete(req.params.id);
+    if (!approval) {
+      return res.status(404).send({ error: 'Approval not found' });
+    }
+    res.status(200).send({ message: 'Approval deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting approval:', error);
+    res.status(500).send({ error: 'Internal server error' });
   }
 });
 
