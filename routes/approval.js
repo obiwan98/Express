@@ -70,7 +70,7 @@ router.post('/api/approvals/test', async (req, res) => {
 });
 
 //승인관리(최슬범님)
-// 승인 요청(신규) TEST
+// 승인 요청(신규)
 router.post('/api/approvals/save', async (req, res) => {
   try {
     const { reqItems, etc } = req.body.data;
@@ -98,18 +98,18 @@ router.post('/api/approvals/save', async (req, res) => {
       regdate: Date.now(),
       state: itemState,
       confirm: {
-        user: user._id,
-        group: user.group._id,
-        date: Date.now(),
-        comment: 'Approved',
+        user: null,
+        group: null,
+        date: null,
+        comment: null,
       },
       payment: {
-        user: user._id,
-        group: user.group._id,
+        user: null,
+        group: null,
         receiptInfo: null,
         receiptImgUrl: null,
         price: null,
-        date: Date.now(),
+        date: null,
       },
     });
 
@@ -121,8 +121,56 @@ router.post('/api/approvals/save', async (req, res) => {
   }
 });
 
-// 삭제 TEST
-router.delete('/api/approvals/:id', auth, async (req, res) => {
+// 승인 / 반려
+router.put('/api/approvals/:id', async (req, res) => {
+  try {
+    const { confirmItems, etc } = req.body.data;
+
+    const getValueByKey = (items, key) => {
+      const item = items.find((item) => item.key === key);
+      return item ? item.value : null;
+    };
+
+    const confirmComment = getValueByKey(confirmItems, 'confirmComment');
+    const userEmail = etc.email;
+
+    // Email로 user정보 갖고오기
+    const user = await User.findOne({ email: userEmail }).populate('group');
+
+    const approval = await Approval.findById(req.params.id);
+
+    if (!approval) {
+      return res.status(404).send({ error: 'Approval not found' });
+    }
+
+    switch (etc.param) {
+      case 'approve':
+        approval.state = 2;
+        break;
+
+      case 'reject':
+        approval.state = 3;
+        break;
+
+      default:
+        break;
+    }
+
+    approval.confirm.user = user._id;
+    approval.confirm.group = user.group._id;
+    approval.confirm.date = Date.now();
+    approval.confirm.comment = confirmComment;
+
+    await approval.save();
+    res.status(201).send({ message: '결재처리 완료하였습니다.' });
+  } catch (error) {
+    console.error('Error updating approval:', error);
+    res.status(400).send({ error: 'Failed to update approval' });
+  }
+});
+
+// 승인 삭제
+router.delete('/api/approvals/:id', async (req, res) => {
   try {
     const approval = await Approval.findByIdAndDelete(req.params.id);
     if (!approval) {
