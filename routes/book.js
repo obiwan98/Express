@@ -78,11 +78,12 @@ router.get("/bookList", async (req, res) => {
 // 도서 등록
 router.post("/bookAdd", upload.single("cover"), async (req, res) => {
   const { title, author, publisher, group, registDate } = req.body;
+  const cover = req.file?.filename || "";
 
   try {
     const book = new Book({
       title,
-      cover: req.file.filename,
+      cover: cover,
       link: "",
       author,
       categoryName: "",
