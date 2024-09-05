@@ -27,9 +27,19 @@ const upload = require("../middlewares/upload");
 // 도서 조회
 router.get("/bookList", async (req, res) => {
   try {
-    const books = await Book.find();
+    const { title, group } = req.query;
 
-    res.json(books);
+    const escapeRegExp = (string) =>
+      string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const query = {
+      ...(title && { title: new RegExp(escapeRegExp(title), "i") }),
+      ...(group && { group }),
+    };
+
+    const books = await Book.find(query);
+
+    res.status(200).json(books);
   } catch (error) {
     console.error("Error fetching bookList: ", error);
     res.status(500).send({ error: "Internal server error" });
