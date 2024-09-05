@@ -75,10 +75,17 @@ router.post('/api/approvals/save', async (req, res) => {
   try {
     const { reqItems, etc } = req.body.data;
 
+    console.log(reqItems);
+    console.log(etc);
+
     const getValueByKey = (items, key) => {
       const item = items.find((item) => item.key === key);
       return item ? item.value : null;
     };
+
+    const bookInfo = JSON.parse(getValueByKey(reqItems, 'bookinfo'));
+    const title = bookInfo.inputValue.title;
+    const price = bookInfo.inputValue.priceSales;
 
     const itemComment = getValueByKey(reqItems, 'comment');
     const itemState = getValueByKey(reqItems, 'state');
@@ -91,8 +98,8 @@ router.post('/api/approvals/save', async (req, res) => {
       user: user._id,
       group: user.group._id,
       book: {
-        name: JSON.parse(getValueByKey(reqItems, 'bookinfo')).bookName,
-        price: null,
+        name: title,
+        price: price,
       },
       comment: itemComment,
       regdate: Date.now(),
@@ -121,17 +128,19 @@ router.post('/api/approvals/save', async (req, res) => {
   }
 });
 
-// 승인 / 반려
+// 승인 / 반려 / 구매 등록
 router.put('/api/approvals/:id', async (req, res) => {
   try {
-    const { confirmItems, etc } = req.body.data;
+    const { data, etc } = req.body.data;
 
     const getValueByKey = (items, key) => {
       const item = items.find((item) => item.key === key);
       return item ? item.value : null;
     };
 
-    const confirmComment = getValueByKey(confirmItems, 'confirmComment');
+    const confirmComment = getValueByKey(data, 'confirmComment');
+    const paymentPrice = getValueByKey(data, 'paymentPrice');
+    const paymentReceiptInfo = getValueByKey(data, 'paymentReceiptInfo');
     const userEmail = etc.email;
 
     // Email로 user정보 갖고오기
@@ -152,14 +161,27 @@ router.put('/api/approvals/:id', async (req, res) => {
         approval.state = 3;
         break;
 
+      case 'payment':
+        approval.state = 4;
+        break;
+
       default:
         break;
     }
 
-    approval.confirm.user = user._id;
-    approval.confirm.group = user.group._id;
-    approval.confirm.date = Date.now();
-    approval.confirm.comment = confirmComment;
+    if (etc.param == 'approve' || etc.param == 'reject') {
+      approval.confirm.user = user._id;
+      approval.confirm.group = user.group._id;
+      approval.confirm.date = Date.now();
+      approval.confirm.comment = confirmComment;
+    } else if (etc.param === 'payment') {
+      approval.payment.user = user._id;
+      approval.payment.group = user.group._id;
+      approval.payment.receiptInfo = paymentReceiptInfo;
+      approval.payment.receiptImgUrl = null;
+      approval.payment.price = paymentPrice;
+      approval.payment.date = Date.now();
+    }
 
     await approval.save();
     res.status(201).send({ message: '결재처리 완료하였습니다.' });
