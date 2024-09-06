@@ -11,7 +11,9 @@ const transporter = nodemailer.createTransport({
 });
 
 // 이메일 발송 엔드포인트
-router.post('/send-email', async (req, res) => {
+router.post('/api/send-email', async (req, res) => {
+  // #swagger.tags = ['Mail']
+  // #swagger.summary = '이메일 보내기'
   console.log(process.env.MAILERSEND_API_KEY);
 
   const { to, subject, text, html } = req.body; // 요청 바디에서 데이터 가져오기
