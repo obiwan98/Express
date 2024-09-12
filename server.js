@@ -40,6 +40,8 @@ app.use("/", approvalRoutes);
 app.use("/", externalApiRoutes);
 app.use("/", mailSenderRoutes);
 
+app.use("/uploads", express.static("D:/uploads/bookCover"));
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
