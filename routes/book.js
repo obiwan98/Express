@@ -25,7 +25,7 @@ const upload = require("../middlewares/upload");
  *         description: Internal Server Error
  */
 // 도서 조회
-router.get("/bookList", async (req, res) => {
+router.get("/api/books/bookList", async (req, res) => {
   try {
     const { title, group } = req.query;
 
@@ -76,7 +76,7 @@ router.get("/bookList", async (req, res) => {
  *         description: Server Error response description
  */
 // 도서 등록
-router.post("/bookAdd", upload.single("cover"), async (req, res) => {
+router.post("/api/books/bookAdd", upload.single("cover"), async (req, res) => {
   const { title, author, publisher, group, registDate } = req.body;
   const cover = req.file?.filename || "";
 
@@ -140,7 +140,7 @@ router.post("/bookAdd", upload.single("cover"), async (req, res) => {
  *         description: Server Error response description
  */
 // 도서 정보 변경
-router.put("/bookUpdate/:id", async (req, res) => {
+router.put("/api/books/bookUpdate/:id", async (req, res) => {
   const { title, author, publisher, group, registDate } = req.body;
 
   try {
@@ -190,7 +190,7 @@ router.put("/bookUpdate/:id", async (req, res) => {
  *         description: Server Error response description
  */
 // 도서 삭제
-router.delete("/bookDelete/:id", async (req, res) => {
+router.delete("/api/books/bookDelete/:id", async (req, res) => {
   try {
     const book = await Book.findByIdAndDelete(req.params.id);
 
