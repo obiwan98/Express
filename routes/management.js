@@ -87,8 +87,7 @@ router.put(
         { new: true, runValidators: true }
       );
 
-      if (!bookData)
-        res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
+      !bookData && res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
 
       res.status(200).send({ message: '도서를 변경하였습니다.' });
     } catch (error) {
@@ -97,12 +96,38 @@ router.put(
   }
 );
 
+// 후기 등록
+router.put('/api/management/reviewWrite/:id', async (req, res) => {
+  const { user, group, rate, tag, comment, registrationDate, registeredBy } =
+    req.body;
+
+  try {
+    const reviewData = await Management.findByIdAndUpdate(req.params.id, {
+      review: {
+        user,
+        group,
+        rate,
+        tag,
+        comment,
+        registrationDate,
+        registeredBy,
+      },
+    });
+
+    !reviewData && res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
+
+    res.status(200).send({ message: '후기를 등록하였습니다.' });
+  } catch (error) {
+    res.status(500).send({ errorCode: error.code, error: error.errmsg });
+  }
+});
+
 // 도서 삭제
 router.delete('/api/management/bookDelete/:id', async (req, res) => {
   try {
     const bookData = await Management.findByIdAndDelete(req.params.id);
 
-    if (!bookData) res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
+    !bookData && res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
 
     res.status(200).send({ message: '도서를 삭제하였습니다.' });
   } catch (error) {
