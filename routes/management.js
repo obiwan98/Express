@@ -96,22 +96,48 @@ router.put(
   }
 );
 
+// 도서 대여
+router.put('/api/management/bookHistory/:id', async (req, res) => {
+  const { user, startDate, endDate, registeredBy } = req.body;
+
+  try {
+    const historyData = await Management.findByIdAndUpdate(req.params.id, {
+      $push: {
+        history: {
+          user,
+          startDate,
+          endDate,
+          registeredBy
+        },
+      }
+    });
+
+    !historyData && res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
+    
+    res.status(200).send({ message: '도서를 대여하였습니다.' });
+  } catch (error) {
+    res.status(500).send({ errorCode: error.code, error: error.errmsg });
+  }
+});
+
 // 후기 등록
-router.put('/api/management/reviewWrite/:id', async (req, res) => {
+router.put('/api/management/bookReviewWrite/:id', async (req, res) => {
   const { user, group, rate, tag, comment, registrationDate, registeredBy } =
     req.body;
 
   try {
     const reviewData = await Management.findByIdAndUpdate(req.params.id, {
-      review: {
-        user,
-        group,
-        rate,
-        tag,
-        comment,
-        registrationDate,
-        registeredBy,
-      },
+      $push: {
+        reviews: {
+          user,
+          group,
+          rate,
+          tag,
+          comment,
+          registrationDate,
+          registeredBy,
+        },
+      }
     });
 
     !reviewData && res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
