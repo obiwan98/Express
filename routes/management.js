@@ -107,14 +107,30 @@ router.put('/api/management/bookHistory/:id', async (req, res) => {
           user,
           startDate,
           endDate,
-          registeredBy
+          registeredBy,
         },
-      }
+      },
     });
 
     !historyData && res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
-    
+
     res.status(200).send({ message: '도서를 대여하였습니다.' });
+  } catch (error) {
+    res.status(500).send({ errorCode: error.code, error: error.errmsg });
+  }
+});
+
+// 도서 대여 이력 조회
+router.get('/api/management/bookHistory/:id', async (req, res) => {
+  try {
+    const bookData = await Management.findOne(
+      { _id: req.params.id },
+      { history: 1 }
+    );
+
+    !bookData && res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
+
+    res.status(200).json(bookData.history);
   } catch (error) {
     res.status(500).send({ errorCode: error.code, error: error.errmsg });
   }
@@ -137,7 +153,7 @@ router.put('/api/management/bookReviewWrite/:id', async (req, res) => {
           registrationDate,
           registeredBy,
         },
-      }
+      },
     });
 
     !reviewData && res.status(404).send({ error: '도서를 찾을 수 없습니다.' });
