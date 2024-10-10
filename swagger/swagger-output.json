@@ -447,22 +447,75 @@
           }
         },
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "to": {
-                    "example": "any"
+                  "sender": {
+                    "type": "object",
+                    "properties": {
+                      "applicantName": {
+                        "type": "string",
+                        "example": "박광연님"
+                      },
+                      "department": {
+                        "type": "string",
+                        "example": "CGV팀"
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "kwangyoun.park@cj.net"
+                      }
+                    }
                   },
-                  "subject": {
-                    "example": "any"
+                  "recipient": {
+                    "type": "object",
+                    "properties": {
+                      "to": {
+                        "type": "string",
+                        "example": "obiwan98@cj.net"
+                      },
+                      "subject": {
+                        "type": "string",
+                        "example": "결재 승인 안내"
+                      }
+                    }
                   },
-                  "text": {
-                    "example": "any"
+                  "bookInfo": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "example": "스프링으로 하는 마이크로서비스 구축 2/e"
+                      },
+                      "price": {
+                        "type": "string",
+                        "example": "20,000원"
+                      },
+                      "requestDetails": {
+                        "type": "string",
+                        "example": "요청사항 내용을 여기에 입력해주세요."
+                      }
+                    }
                   },
-                  "html": {
-                    "example": "any"
+                  "approvalInfo": {
+                    "type": "object",
+                    "properties": {
+                      "approverName": {
+                        "type": "string",
+                        "example": "박광연님"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "승인"
+                      },
+                      "date": {
+                        "type": "string",
+                        "example": "2024.05.09"
+                      }
+                    }
                   }
                 }
               }
@@ -479,8 +532,8 @@
         "summary": "회원가입",
         "description": "",
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "OK"
           },
           "400": {
             "description": "Bad Request"
