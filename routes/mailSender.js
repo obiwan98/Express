@@ -277,6 +277,7 @@ router.post('/api/send-email', async (req, res) => {
 */
   const { sender, recipient, bookInfo, approvalInfo } = req.body; // 요청 바디에서 데이터 가져오기
 
+  
   // 필수 필드 검증
   if (!recipient.to || !recipient.subject || !sender.applicantName || !bookInfo.title || !approvalInfo.status) {
     return res.status(400).json({ message: '필수 필드가 누락되었습니다: recipient.to, recipient.subject, sender.applicantName, bookInfo.title, approvalInfo.status' });
