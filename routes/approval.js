@@ -4,15 +4,32 @@ const User = require('../models/user');
 const auth = require('../middlewares/auth');
 const axios = require('axios');
 const router = express.Router();
+const moment = require('moment');
 
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
+// Create Dir & Upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // cb(null, 'D:/uploads');
-    cb(null, process.env.IMAGE_URL);
+    const uploadPath = process.env.IMAGE_URL;
+
+    fs.access(uploadPath, fs.constants.F_OK, (err) => {
+      if (err) {
+        fs.mkdir(uploadPath, { recursive: true }, (mkdirErr) => {
+          if (mkdirErr) {
+            console.error('Error creating directory:', mkdirErr);
+            return cb(mkdirErr);
+          }
+          cb(null, uploadPath);
+        });
+      } else {
+        cb(null, uploadPath);
+      }
+    });
   },
+
   filename: (req, file, cb) => {
     cb(null, file.originalname);
   },
@@ -95,7 +112,7 @@ router.post('/api/approvals/save', async (req, res) => {
       return item ? item.value : null;
     };
 
-    const bookInfo = JSON.parse(getValueByKey(reqItems, 'bookinfo'));
+    const bookInfo = JSON.parse(getValueByKey(reqItems, 'bookInfo'));
     const title = bookInfo.inputValue.title;
     const price = bookInfo.inputValue.priceSales;
     const author = bookInfo.inputValue.author;
@@ -156,7 +173,7 @@ router.put('/api/approvals/:id', async (req, res) => {
 
     const confirmComment = getValueByKey(data, 'confirmComment');
     const paymentPrice = getValueByKey(data, 'paymentPrice');
-    const paymentReceiptImgUrl = getValueByKey(data, 'paymentReceiptImgUrl');
+    const paymentReceiptInfo = getValueByKey(data, 'paymentReceiptInfo');
     const userEmail = etc.email;
 
     // Email로 user정보 갖고오기
@@ -194,7 +211,7 @@ router.put('/api/approvals/:id', async (req, res) => {
       console.log(approval.payment);
       approval.payment.user = user._id;
       approval.payment.group = user.group._id;
-      approval.payment.receiptImgUrl = paymentReceiptImgUrl;
+      approval.payment.receiptImgUrl = paymentReceiptInfo;
       approval.payment.price = paymentPrice;
       approval.payment.date = Date.now();
     }
