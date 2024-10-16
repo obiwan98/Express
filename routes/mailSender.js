@@ -248,15 +248,17 @@ const emailTemplate = (data) => {
 router.post('/api/send-email', async (req, res) => {
   // #swagger.tags = ['Mail']
   // #swagger.summary = '이메일 보내기'
-  console.log(process.env.MAILERSEND_API_KEY);
 
   const { type, from, to } = req.body; // 요청 바디에서 데이터 가져오기
 
   
   // 필수 필드 검증
-  if (!to || !subject || !text) {
-    return res.status(400).json({ message: '필수 필드가 누락되었습니다: from, to, subject, text' });
+  if (!recipient.to || !recipient.subject || !sender.applicantName || !bookInfo.title || !approvalInfo.status) {
+    return res.status(400).json({ message: '필수 필드가 누락되었습니다: recipient.to, recipient.subject, sender.applicantName, bookInfo.title, approvalInfo.status' });
   }
+
+  // HTML 템플릿에 데이터 삽입
+  const htmlContent = generateHtmlTemplate({ sender, recipient, bookInfo, approvalInfo });
 
   const mailOptions = {
     from: 'bss.master2024@gmail.com',
@@ -265,15 +267,15 @@ router.post('/api/send-email', async (req, res) => {
     text: '',
     html: html, // HTML 본문을 지원합니다
   };
-  
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send('Error sending email');
-    }
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
     console.log('Email sent: ' + info.response);
     res.status(200).send('Email sent successfully');
-  });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error sending email');
+  }
 });
 
-module.exports = router; 
+module.exports = router;
