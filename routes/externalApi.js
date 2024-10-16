@@ -36,7 +36,7 @@ router.post('/api/external/aladinSearch', async (req, res) => {
   const { query, queryType = 'Keyword', maxResults = 10, start = 1 } = req.body;
 
   if (!query) {
-    return res.status(400).json({ error: '검색어(제목 또는 저자)를 입력해주세요.' });
+    return res.status(400).json({ error: '검색어(제목, 저자 또는 ISBN번호)를 입력해주세요.' });
   }
 
   try {
@@ -73,11 +73,10 @@ router.post('/api/external/aladinSearch', async (req, res) => {
       publisher: item.publisher,
     }));
 
-    res.status(200).json(books);
+    res.status(200).json({books, message:'도서 리스트 조회가 성공하였습니다.'});
 
   } catch (error) {
-    console.error('Error fetching books:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: '리스트 조회 중 오류가 발생했습니다.' });
   }
 });
 
@@ -139,7 +138,7 @@ router.post('/api/external/aladinLookUp', async (req, res) => {
     res.status(200).json(books[0]);
   } catch (error) {
     console.error('Error fetching books:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: '조회 중 오류가 발생했습니다.' });
   }
 });
 
@@ -206,11 +205,10 @@ router.post('/api/external/aladinList', async (req, res) => {
       link: item.link,
     }));
 
-    res.status(200).json(books);
+    res.status(200).json({books});
 
   } catch (error) {
-    console.error('Error fetching books:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: '리스트 조회 중 오류가 발생했습니다.' });
   }
 });
 
@@ -220,10 +218,10 @@ router.get('/api/external/aladinTag', async (req, res) => {
   // #swagger.summary = '태그 목록 조회'
   try {
     const tags = await Tag.find();
-    res.status(200).send(tags);
+    res.status(200).send({tags});
   } catch (error) {
     console.error('Error fetching tags:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: '리스트 조회 중 오류가 발생했습니다.' });
   }
 });
 

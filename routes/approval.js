@@ -4,6 +4,38 @@ const User = require('../models/user');
 const auth = require('../middlewares/auth');
 const axios = require('axios');
 const router = express.Router();
+const moment = require('moment');
+
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Create Dir & Upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = process.env.IMAGE_URL;
+
+    fs.access(uploadPath, fs.constants.F_OK, (err) => {
+      if (err) {
+        fs.mkdir(uploadPath, { recursive: true }, (mkdirErr) => {
+          if (mkdirErr) {
+            console.error('Error creating directory:', mkdirErr);
+            return cb(mkdirErr);
+          }
+          cb(null, uploadPath);
+        });
+      } else {
+        cb(null, uploadPath);
+      }
+    });
+  },
+
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 //승인관리 리스트
 router.get('/api/approvals/list/:state', auth, async (req, res) => {
@@ -75,17 +107,16 @@ router.post('/api/approvals/save', async (req, res) => {
   try {
     const { reqItems, etc } = req.body.data;
 
-    console.log(reqItems);
-    console.log(etc);
-
     const getValueByKey = (items, key) => {
       const item = items.find((item) => item.key === key);
       return item ? item.value : null;
     };
 
-    const bookInfo = JSON.parse(getValueByKey(reqItems, 'bookinfo'));
+    const bookInfo = JSON.parse(getValueByKey(reqItems, 'bookInfo'));
     const title = bookInfo.inputValue.title;
     const price = bookInfo.inputValue.priceSales;
+    const author = bookInfo.inputValue.author;
+    const ISBN = bookInfo.inputValue.isbn13;
 
     const itemComment = getValueByKey(reqItems, 'comment');
     const itemState = getValueByKey(reqItems, 'state');
@@ -100,6 +131,8 @@ router.post('/api/approvals/save', async (req, res) => {
       book: {
         name: title,
         price: price,
+        author: author,
+        ISBN: ISBN,
       },
       comment: itemComment,
       regdate: Date.now(),
@@ -175,10 +208,10 @@ router.put('/api/approvals/:id', async (req, res) => {
       approval.confirm.date = Date.now();
       approval.confirm.comment = confirmComment;
     } else if (etc.param === 'payment') {
+      console.log(approval.payment);
       approval.payment.user = user._id;
       approval.payment.group = user.group._id;
-      approval.payment.receiptInfo = paymentReceiptInfo;
-      approval.payment.receiptImgUrl = null;
+      approval.payment.receiptImgUrl = paymentReceiptInfo;
       approval.payment.price = paymentPrice;
       approval.payment.date = Date.now();
     }
@@ -203,6 +236,14 @@ router.delete('/api/approvals/:id', async (req, res) => {
     console.error('Error deleting approval:', error);
     res.status(500).send({ error: 'Internal server error' });
   }
+});
+
+// 첨부파일 업로드
+router.post('/api/approvals/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  res.send({ filePath: `D:/uploads/${req.file.filename}` });
 });
 
 //승인관리(신혜경님)

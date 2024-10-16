@@ -57,10 +57,9 @@ router.post('/api/users/signup', async (req, res) => {
 
     // 사용자 저장
     await user.save();
-    res.status(201).send({ message: '회원가입이 성공하였습니다' });
+    res.status(200).send({ message: "회원가입이 성공하였습니다." });
   } catch (error) {
-    console.error('Error during signup:', error);
-    res.status(400).send({ errorCode: error.code, error: error.errmsg });
+    res.status(400).send({ errorCode: error.code, error: "회원가입이 실패하였습니다." });
   }
 });
 
@@ -93,14 +92,12 @@ router.post('/api/users/login', async (req, res) => {
       .populate('group')
       .populate('role');
     if (!user) {
-      console.error('User not found:', email);
-      return res.status(400).send({ error: 'Invalid email or password' });
+      return res.status(400).send({ errorCode: error.code, error: "이메일 또는 패스워드가 틀렸습니다." });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      console.error('Invalid password for user:', email);
-      return res.status(400).send({ error: 'Invalid email or password' });
+      return res.status(400).send({ errorCode: error.code, error: "이메일 또는 패스워드가 틀렸습니다." });
     }
 
     const token = jwt.sign(
@@ -114,10 +111,9 @@ router.post('/api/users/login', async (req, res) => {
       JWT_SECRET,
       { expiresIn: '1h' }
     );
-    res.status(200).send({ token });
+    res.status(200).send({ token, message: "로그인이 성공하였습니다." });
   } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: "로그인 시도 중 오류가 발생했습니다." });
   }
 });
 
@@ -129,12 +125,11 @@ router.get('/api/users/me', auth, async (req, res) => {
       .populate('group')
       .populate('role');
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "이메일 정보가 틀렸습니다." });
     }
-    res.status(200).send(user);
+    res.status(200).send({user, message: "회원 정보 조회가 성공하였습니다."});
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: "회원 정보 조회 중 오류가 발생했습니다." });
   }
 });
 
@@ -142,11 +137,10 @@ router.get('/api/users/', auth, async (req, res) => {
   // #swagger.tags = ['Users']
   // #swagger.summary = '모든 회원 리스트 조회'
   try {
-    const users = await User.find().populate('group').populate('role');
-    res.status(200).send(users);
+    const users = await User.find().populate("group").populate("role");
+    res.status(200).send({users, message: "회원 리스트 조회가 성공하였습니다."});
   } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: "회원 리스트 조회 중 오류가 발생했습니다." });
   }
 });
 
@@ -159,12 +153,11 @@ router.get('/api/users/:id', auth, async (req, res) => {
       .populate('group')
       .populate('role');
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "회원을 찾을 수 없습니다." });
     }
-    res.status(200).send(user);
+    res.status(200).send({user, message: "회원 정보 조회가 성공하였습니다."});
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: "회원 정보 조회 중 오류가 발생했습니다." });
   }
 });
 
@@ -196,17 +189,16 @@ router.put('/api/users/:id', auth, async (req, res) => {
     console.log(req.params.id);
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "회원을 찾을 수 없습니다." });
     }
 
     user.role = role;
     user.group = group;
 
     await user.save();
-    res.status(200).send({ message: 'User updated successfully' });
+    res.status(200).send({ message: "회원 정보 변경이 완료되었습니다." });
   } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(400).send({ error: 'Failed to update user' });
+    res.status(400).send({ error: "회원 정보 변경이 실패하였습니다." });
   }
 });
 
@@ -216,12 +208,11 @@ router.delete('/api/users/:id', auth, async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
-      return res.status(404).send({ error: 'User not found' });
+      return res.status(404).send({ error: "회원을 찾을 수 없습니다." });
     }
-    res.status(200).send({ message: 'User deleted successfully' });
+    res.status(200).send({ message: "회원 정보 삭제가 성공하였습니다." });
   } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: "회원 정보 삭제 중 오류가 발생했습니다." });
   }
 });
 
@@ -230,10 +221,9 @@ router.get('/api/roles', async (req, res) => {
   // #swagger.summary = 'User 역할 목록 조회'
   try {
     const roles = await Role.find();
-    res.status(200).send(roles);
+    res.status(200).send({roles, message: "역할 목록 조회가 성공하였습니다."});
   } catch (error) {
-    console.error('Error fetching roles:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: '역할 목록 조회 중 오류가 발생했습니다.' });
   }
 });
 
@@ -242,10 +232,9 @@ router.get('/api/groups', async (req, res) => {
   // #swagger.summary = 'User 그룹 목록 조회'
   try {
     const groups = await Group.find();
-    res.status(200).send(groups);
+    res.status(200).send({groups, message: "그룹 목록 조회가 성공하였습니다."});
   } catch (error) {
-    console.error('Error fetching groups:', error);
-    res.status(500).send({ error: 'Internal server error' });
+    res.status(500).send({ error: '그룹 목록 조회 중 오류가 발생했습니다.' });
   }
 });
 module.exports = router;
