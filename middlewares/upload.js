@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     let dynamicDir;
 
     // 라우트 정보에 따라 동적 경로 설정
-    if (req.baseUrl.includes("/books"))
+    if (req.originalUrl.includes("/management"))
       dynamicDir = path.join("D:/uploads/bookCover");
 
     if (!fs.existsSync(dynamicDir))
