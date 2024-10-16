@@ -20,8 +20,12 @@ const historySchema = new mongoose.Schema({
 
 const managementSchema = new mongoose.Schema({
   title: { type: String, required: true },
+  link: { type: String, required: false },
+  description: { type: String, required: false },
   author: { type: String, required: false },
-  cover: { type: String, required: false },
+  coverUrl: { type: String, required: false },
+  coverFile: { type: String, required: false },
+  isbn: { type: String, required: false },
   publisher: { type: String, required: false },
   publicationDate: { type: Date, default: Date.now },
   count: { type: Number, default: 1 },

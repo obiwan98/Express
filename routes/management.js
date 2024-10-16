@@ -8,11 +8,15 @@ const upload = require('./../middlewares/upload');
 // 도서 등록
 router.post(
   '/api/management/bookAdd',
-  upload.single('cover'),
+  upload.single('coverFile'),
   async (req, res) => {
     const {
       title,
+      link,
+      description,
       author,
+      coverUrl,
+      isbn,
       publisher,
       publicationDate,
       count,
@@ -20,13 +24,17 @@ router.post(
       group,
       registeredBy,
     } = req.body;
-    const cover = req.file?.filename || '';
+    const coverFile = req.file?.filename || '';
 
     try {
       const bookData = new Management({
         title,
+        link,
+        description,
         author,
-        cover: cover,
+        coverUrl,
+        coverFile,
+        isbn,
         publisher,
         publicationDate,
         count,
@@ -45,8 +53,9 @@ router.post(
 );
 
 // 도서 조회
-router.get('/api/management/bookList', async (req, res) => {
+router.get('/api/management/bookList/:id?', async (req, res) => {
   try {
+    const { id } = req.params;
     const { title, group } = req.query;
 
     const escapeRegExp = (string) =>
@@ -57,9 +66,13 @@ router.get('/api/management/bookList', async (req, res) => {
       ...(group && { group }),
     };
 
-    const bookList = await Management.find(query);
+    const bookList = id
+      ? await Management.findById(id)
+      : await Management.find(query);
 
-    res.status(200).json(bookList);
+    !bookList
+      ? res.status(404).send({ error: '도서를 찾을 수 없습니다.' })
+      : res.status(200).json(bookList);
   } catch (error) {
     res.status(500).send({ errorCode: error.code, error: error.errmsg });
   }
@@ -68,10 +81,10 @@ router.get('/api/management/bookList', async (req, res) => {
 // 도서 변경
 router.put(
   '/api/management/bookUpdate/:id',
-  upload.single('cover'),
+  upload.single('coverFile'),
   async (req, res) => {
     const { title, author, publisher, publicationDate, count } = req.body;
-    const cover = req.file?.filename || '';
+    const coverFile = req.file?.filename || '';
 
     try {
       const bookData = await Management.findByIdAndUpdate(
@@ -79,7 +92,7 @@ router.put(
         {
           title,
           author,
-          ...(cover && { cover }),
+          ...(coverFile && { coverFile }),
           publisher,
           publicationDate,
           count,
