@@ -40,10 +40,7 @@ app.use('/', externalApiRoutes);
 app.use('/', mailSenderRoutes);
 
 app.use('/uploads', express.static('D:/uploads/bookCover'));
-<<<<<<< HEAD
 app.use('/downloads', express.static('D:/uploads'));
-=======
->>>>>>> Express_management_dev
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
