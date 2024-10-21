@@ -7,7 +7,10 @@ const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
 const userRoutes = require('./routes/user');
+<<<<<<< HEAD
 const bookRoutes = require('./routes/book');
+=======
+>>>>>>> Express_management_dev
 const managementRoutes = require('./routes/management');
 const approvalRoutes = require('./routes/approval');
 const externalApiRoutes = require('./routes/externalApi');
@@ -35,14 +38,20 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 //app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/', userRoutes);
+<<<<<<< HEAD
 app.use('/', bookRoutes);
+=======
+>>>>>>> Express_management_dev
 app.use('/', managementRoutes);
 app.use('/', approvalRoutes);
 app.use('/', externalApiRoutes);
 app.use('/', mailSenderRoutes);
 
 app.use('/uploads', express.static('D:/uploads/bookCover'));
+<<<<<<< HEAD
 app.use('/downloads', express.static('D:/uploads'));
+=======
+>>>>>>> Express_management_dev
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
