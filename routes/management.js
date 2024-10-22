@@ -1,4 +1,5 @@
 const express = require('express');
+const Group = require('../models/group');
 const router = express.Router();
 
 const Management = require('./../models/management');
@@ -187,6 +188,55 @@ router.delete('/api/management/bookDelete/:id', async (req, res) => {
     res.status(200).send({ message: '도서를 삭제하였습니다.' });
   } catch (error) {
     res.status(500).send({ errorCode: error.code, error: error.errmsg });
+  }
+});
+
+
+// 그룹별 책 개수 카운트 API
+router.get('/api/management/group-count', async (req, res) => {
+  try {
+    const groupCounts = await Management.aggregate([
+      {
+        $group: {
+          _id: "$group",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $lookup: {
+          from: 'groups',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'groupInfo',
+        },
+      },
+      {
+        $unwind: "$groupInfo",
+      },
+      {
+        $project: {
+          _id: 0,
+          groupName: "$groupInfo.team",
+          count: 1,
+        },
+      },
+    ]);
+
+    // 모든 그룹 데이터를 가져와서 책이 없는 그룹도 포함시킴
+    const allGroups = await Group.find();
+    const resultMap = groupCounts.reduce((acc, item) => {
+      acc[item.groupName] = item.count;
+      return acc;
+    }, {});
+
+    const formattedResult = allGroups.map(group => ({
+      groupName: group.team,
+      count: resultMap[group.team] || 0
+    }));
+
+    res.json(formattedResult);
+  } catch (error) {
+    res.status(500).json({ error: '도서 수 조회가 실패하였습니다.' });
   }
 });
 
