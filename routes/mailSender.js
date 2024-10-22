@@ -231,7 +231,6 @@ function generateHtmlTemplate(data) {
 router.post('/api/send-email', async (req, res) => {
   // #swagger.tags = ['Mail']
   // #swagger.summary = '이메일 보내기'
-<<<<<<< HEAD
 	/* #swagger.requestBody = {
     	required: true,
     	content: {
@@ -274,15 +273,6 @@ router.post('/api/send-email', async (req, res) => {
         }
       }
     }
-=======
-
-  const { type, from, to } = req.body; // 요청 바디에서 데이터 가져오기
-
-  
-  // 필수 필드 검증
-  if (!recipient.to || !recipient.subject || !sender.applicantName || !bookInfo.title || !approvalInfo.status) {
-    return res.status(400).json({ message: '필수 필드가 누락되었습니다: recipient.to, recipient.subject, sender.applicantName, bookInfo.title, approvalInfo.status' });
->>>>>>> Express_management_dev
   }
 */
   const { sender, recipient, bookInfo, approvalInfo } = req.body; // 요청 바디에서 데이터 가져오기
@@ -291,9 +281,6 @@ router.post('/api/send-email', async (req, res) => {
   if (!recipient.to || !recipient.subject || !sender.applicantName || !bookInfo.title || !approvalInfo.status) {
     return res.status(400).json({ message: '필수 필드가 누락되었습니다: recipient.to, recipient.subject, sender.applicantName, bookInfo.title, approvalInfo.status' });
   }
-
-  // HTML 템플릿에 데이터 삽입
-  const htmlContent = generateHtmlTemplate({ sender, recipient, bookInfo, approvalInfo });
 
   // HTML 템플릿에 데이터 삽입
   const htmlContent = generateHtmlTemplate({ sender, recipient, bookInfo, approvalInfo });
@@ -307,8 +294,15 @@ router.post('/api/send-email', async (req, res) => {
 
   try {
     const info = await transporter.sendMail(mailOptions);
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
     console.log('Email sent: ' + info.response);
     res.status(200).send('Email sent successfully');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error sending email');
+  }
   } catch (error) {
     console.log(error);
     res.status(500).send('Error sending email');

@@ -139,6 +139,19 @@
         }
       }
     },
+    "/api/approvals/upload": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/external/aladinSearch": {
       "post": {
         "tags": [
@@ -307,7 +320,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-<<<<<<< HEAD
                   "sender": {
                     "type": "object",
                     "properties": {
@@ -371,16 +383,6 @@
                         "example": "2024.05.09"
                       }
                     }
-=======
-                  "type": {
-                    "example": "any"
-                  },
-                  "from": {
-                    "example": "any"
-                  },
-                  "to": {
-                    "example": "any"
->>>>>>> Express_management_dev
                   }
                 }
               }
@@ -558,6 +560,9 @@
           "200": {
             "description": "OK"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "404": {
             "description": "Not Found"
           },
@@ -610,6 +615,49 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/management/bookReturn/{id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "example": "any"
+                  },
+                  "endDate": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
