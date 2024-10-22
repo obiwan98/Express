@@ -294,8 +294,15 @@ router.post('/api/send-email', async (req, res) => {
 
   try {
     const info = await transporter.sendMail(mailOptions);
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
     console.log('Email sent: ' + info.response);
     res.status(200).send('Email sent successfully');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error sending email');
+  }
   } catch (error) {
     console.log(error);
     res.status(500).send('Error sending email');
