@@ -27,6 +27,18 @@ router.post(
     const coverFile = req.file?.filename || '';
 
     try {
+      if (isbn) {
+        const query = {
+          isbn,
+          group,
+        };
+
+        const registeredBookData = await Management.findOne(query);
+
+        if (registeredBookData)
+          return res.status(400).send({ message: '이미 등록된 도서입니다.' });
+      }
+
       const bookData = new Management({
         title,
         link,
@@ -47,7 +59,7 @@ router.post(
 
       res.status(200).send({ message: '도서를 등록하였습니다.' });
     } catch (error) {
-      res.status(500).send({ errorCode: error.code, error: error.errmsg });
+      res.status(500).send({ message: '도서 등록을 실패하였습니다.' });
     }
   }
 );
@@ -104,7 +116,7 @@ router.put(
 
       res.status(200).send({ message: '도서를 변경하였습니다.' });
     } catch (error) {
-      res.status(500).send({ errorCode: error.code, error: error.errmsg });
+      res.status(500).send({ message: '도서 변경을 실패하였습니다.' });
     }
   }
 );
