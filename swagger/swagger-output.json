@@ -1021,6 +1021,48 @@
           }
         }
       }
+    },
+    "/api/users/group/{groupId}/role/{roleId}/info": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "User 그룹&&역할 필터 조회",
+        "description": "",
+        "parameters": [
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "조회할 그룹의 ID",
+            "example": "66a0b1bd8d7e45a08668b300"
+          },
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "조회할 역할의 ID",
+            "example": "66a0bbfe8d7e45a08668b30f"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "components": {

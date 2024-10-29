@@ -288,21 +288,15 @@ router.post('/api/send-email', async (req, res) => {
   const mailOptions = {
     from: 'bss.master2024@gmail.com',
     to: recipient.to,
+    cc: sender.email,
     subject: recipient.subject,
     html: htmlContent, // HTML 본문에 템플릿 사용
   };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-
-  try {
-    const info = await transporter.sendMail(mailOptions);
     console.log('Email sent: ' + info.response);
     res.status(200).send('Email sent successfully');
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('Error sending email');
-  }
   } catch (error) {
     console.log(error);
     res.status(500).send('Error sending email');
