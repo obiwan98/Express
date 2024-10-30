@@ -288,6 +288,7 @@ router.post('/api/send-email', async (req, res) => {
   const mailOptions = {
     from: 'bss.master2024@gmail.com',
     to: recipient.to,
+    cc: sender.email,
     subject: recipient.subject,
     html: htmlContent, // HTML 본문에 템플릿 사용
   };
