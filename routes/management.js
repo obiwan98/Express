@@ -184,6 +184,18 @@ router.get('/api/management/bookHistory/:id', async (req, res) => {
 router.put('/api/management/bookReturn/:id', async (req, res) => {
   const { id, endDate } = req.body;
 
+  const bookHistory = await Management.findOne(
+    {
+      _id: req.params.id,
+    },
+    {
+      history: { $elemMatch: { _id: id } },
+    }
+  );
+
+  const isStartDateAfterToday =
+    new Date(bookHistory.history[0].startDate) > new Date();
+
   try {
     const bookData = await Management.findOneAndUpdate(
       { _id: req.params.id, 'history._id': id },
@@ -193,6 +205,7 @@ router.put('/api/management/bookReturn/:id', async (req, res) => {
         },
         $set: {
           'history.$.state': 2,
+          ...(isStartDateAfterToday && { 'history.$.startDate': endDate }),
           'history.$.endDate': endDate,
         },
       },
@@ -274,14 +287,13 @@ router.delete('/api/management/bookDelete/:id', async (req, res) => {
   }
 });
 
-
 // 그룹별 책 개수 카운트 API
 router.get('/api/management/group-count', async (req, res) => {
   try {
     const groupCounts = await Management.aggregate([
       {
         $group: {
-          _id: "$group",
+          _id: '$group',
           count: { $sum: 1 },
         },
       },
@@ -294,12 +306,12 @@ router.get('/api/management/group-count', async (req, res) => {
         },
       },
       {
-        $unwind: "$groupInfo",
+        $unwind: '$groupInfo',
       },
       {
         $project: {
           _id: 0,
-          groupName: "$groupInfo.team",
+          groupName: '$groupInfo.team',
           count: 1,
         },
       },
@@ -312,9 +324,9 @@ router.get('/api/management/group-count', async (req, res) => {
       return acc;
     }, {});
 
-    const formattedResult = allGroups.map(group => ({
+    const formattedResult = allGroups.map((group) => ({
       groupName: group.team,
-      count: resultMap[group.team] || 0
+      count: resultMap[group.team] || 0,
     }));
 
     res.json(formattedResult);
