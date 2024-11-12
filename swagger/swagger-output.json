@@ -14,6 +14,10 @@
   "paths": {
     "/api/approvals/list/{state}": {
       "get": {
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "승인관리 리스트",
         "description": "",
         "parameters": [
           {
@@ -37,6 +41,10 @@
     },
     "/api/approvals/test": {
       "post": {
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "승인컬렉션 테스트 데이터 입력",
         "description": "",
         "responses": {
           "201": {
@@ -50,6 +58,10 @@
     },
     "/api/approvals/save": {
       "post": {
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "승인 요청(신규)",
         "description": "",
         "responses": {
           "201": {
@@ -77,6 +89,10 @@
     },
     "/api/approvals/{id}": {
       "put": {
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "승인 / 반려 / 구매 등록",
         "description": "",
         "parameters": [
           {
@@ -115,6 +131,10 @@
         }
       },
       "delete": {
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "승인 삭제",
         "description": "",
         "parameters": [
           {
@@ -141,6 +161,10 @@
     },
     "/api/approvals/upload": {
       "post": {
+        "tags": [
+          "Approvals"
+        ],
+        "summary": "첨부파일 업로드",
         "description": "",
         "responses": {
           "200": {
@@ -393,6 +417,10 @@
     },
     "/api/management/bookAdd": {
       "post": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 등록",
         "description": "",
         "responses": {
           "200": {
@@ -456,6 +484,10 @@
     },
     "/api/management/bookList/{id?}": {
       "get": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 조회",
         "description": "",
         "parameters": [
           {
@@ -496,6 +528,10 @@
     },
     "/api/management/bookUpdate/{id}": {
       "put": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 변경",
         "description": "",
         "parameters": [
           {
@@ -548,6 +584,10 @@
     },
     "/api/management/bookHistory/{id}": {
       "put": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 대여",
         "description": "",
         "parameters": [
           {
@@ -598,6 +638,10 @@
         }
       },
       "get": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 대여 이력 조회",
         "description": "",
         "parameters": [
           {
@@ -624,6 +668,10 @@
     },
     "/api/management/bookReturn/{id}": {
       "put": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 반납",
         "description": "",
         "parameters": [
           {
@@ -667,6 +715,10 @@
     },
     "/api/management/bookReviewWrite/{id}": {
       "put": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 후기 등록",
         "description": "",
         "parameters": [
           {
@@ -728,6 +780,10 @@
     },
     "/api/management/bookDelete/{id}": {
       "delete": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 삭제",
         "description": "",
         "parameters": [
           {
@@ -754,6 +810,10 @@
     },
     "/api/management/group-count": {
       "get": {
+        "tags": [
+          "Management"
+        ],
+        "summary": "도서 그룹별 책 개수 카운트 API",
         "description": "",
         "responses": {
           "200": {

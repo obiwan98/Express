@@ -11,6 +11,8 @@ router.post(
   '/api/management/bookAdd',
   upload.single('coverFile'),
   async (req, res) => {
+  // #swagger.tags = ['Management']
+  // #swagger.summary = '도서 등록'
     const {
       title,
       link,
@@ -67,6 +69,8 @@ router.post(
 
 // 도서 조회
 router.get('/api/management/bookList/:id?', async (req, res) => {
+  // #swagger.tags = ['Management']
+  // #swagger.summary = '도서 조회'
   try {
     const { id } = req.params;
     const { title, group } = req.query;
@@ -96,6 +100,8 @@ router.put(
   '/api/management/bookUpdate/:id',
   upload.single('coverFile'),
   async (req, res) => {
+    // #swagger.tags = ['Management']
+    // #swagger.summary = '도서 변경'
     const { title, author, publisher, publicationDate, count } = req.body;
     const coverFile = req.file?.filename || '';
 
@@ -124,6 +130,8 @@ router.put(
 
 // 도서 대여
 router.put('/api/management/bookHistory/:id', async (req, res) => {
+  // #swagger.tags = ['Management']
+  // #swagger.summary = '도서 대여'
   const { user, startDate, endDate, registeredBy } = req.body;
 
   try {
@@ -166,6 +174,8 @@ router.put('/api/management/bookHistory/:id', async (req, res) => {
 
 // 도서 대여 이력 조회
 router.get('/api/management/bookHistory/:id', async (req, res) => {
+  // #swagger.tags = ['Management']
+  // #swagger.summary = '도서 대여 이력 조회'
   try {
     const bookData = await Management.findOne(
       { _id: req.params.id },
@@ -182,6 +192,8 @@ router.get('/api/management/bookHistory/:id', async (req, res) => {
 
 // 도서 반납
 router.put('/api/management/bookReturn/:id', async (req, res) => {
+  // #swagger.tags = ['Management']
+  // #swagger.summary = '도서 반납'
   const { id, endDate } = req.body;
 
   const bookHistory = await Management.findOne(
@@ -223,6 +235,8 @@ router.put('/api/management/bookReturn/:id', async (req, res) => {
 
 // 후기 등록
 router.put('/api/management/bookReviewWrite/:id', async (req, res) => {
+  // #swagger.tags = ['Management']
+  // #swagger.summary = '도서 후기 등록'
   const {
     id,
     user,
@@ -276,6 +290,8 @@ router.put('/api/management/bookReviewWrite/:id', async (req, res) => {
 
 // 도서 삭제
 router.delete('/api/management/bookDelete/:id', async (req, res) => {
+  // #swagger.tags = ['Management']
+  // #swagger.summary = '도서 삭제'
   try {
     const bookData = await Management.findByIdAndDelete(req.params.id);
 
@@ -289,6 +305,8 @@ router.delete('/api/management/bookDelete/:id', async (req, res) => {
 
 // 그룹별 책 개수 카운트 API
 router.get('/api/management/group-count', async (req, res) => {
+  // #swagger.tags = ['Management']
+  // #swagger.summary = '도서 그룹별 책 개수 카운트 API'
   try {
     const groupCounts = await Management.aggregate([
       {
