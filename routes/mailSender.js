@@ -165,11 +165,15 @@ function rentalRequestTemplate(data) {
                                         <table class="table" cellspacing="0" cellpadding="0" width="100%">
                                             <tbody>
                                                 <tr>
-                                                    <th style="width: 12%;">도서명</th>
+                                                    <th style="width: 20%;">도서 소유 팀</th>
+                                                    <td style="border-top: solid 1px #000;text-align:left;" class="wrap-text">${data.bookInfo.ownTeam}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th style="width: 20%;">도서명</th>
                                                     <td style="border-top: solid 1px #000;text-align:left;" class="wrap-text">${data.bookInfo.title}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th style="width: 12%;border-top: solid 1px #e6e8e8;">대여기간</th>
+                                                    <th style="width: 20%;border-top: solid 1px #e6e8e8;">대여기간</th>
                                                     <td style="text-align:left;" class="wrap-text">${data.bookInfo.requestDetails}</td>
                                                 </tr>
                                             </tbody>
