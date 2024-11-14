@@ -52,7 +52,7 @@ router.get('/api/approvals/list/:state', auth, async (req, res) => {
       .populate('confirm.group')
       .populate('payment.user', 'email name password signupDate')
       .populate('payment.group')
-      .sort({ regdate: 1 });
+      .sort({ regdate: -1 });
 
     res.status(200).send(approvals);
   } catch (error) {

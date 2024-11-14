@@ -14,7 +14,7 @@ const templates = {
     rentalRequest: (data) => rentalRequestTemplate(data),
     approvalRequest: (data) => approvalRequestTemplate(data)
 };
-/*
+
 // 대여요청 메일 템플릿
 function rentalRequestTemplate(data) {
     return `
@@ -169,7 +169,7 @@ function rentalRequestTemplate(data) {
                                                     <td style="border-top: solid 1px #000;text-align:left;" class="wrap-text">${data.bookInfo.title}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th style="width: 12%;border-top: solid 1px #e6e8e8;">요청사항</th>
+                                                    <th style="width: 12%;border-top: solid 1px #e6e8e8;">대여기간</th>
                                                     <td style="text-align:left;" class="wrap-text">${data.bookInfo.requestDetails}</td>
                                                 </tr>
                                             </tbody>
@@ -288,7 +288,7 @@ function approvalRequestTemplate(data) {
         <table cellspacing="0" cellpadding="0" width="100%">
             <tbody>
                 <tr>
-                    <td class="title">결재 ${data.approvalInfo.status === '승인' ? '승인' : '반려'}되었습니다.</td>
+                    <td class="title">결재 ${data.approvalInfo.status} 되었습니다.</td>
                 </tr>
                 <tr>
                     <td height="42"></td>
@@ -346,7 +346,7 @@ function approvalRequestTemplate(data) {
                                                 </tr>
                                                 <tr>
                                                     <th style="width: 12%;border-top: solid 1px #e6e8e8;">가격</th>
-                                                    <td style="text-align:left;">${data.bookInfo.price}</td>
+                                                    <td style="text-align:left;">${data.bookInfo.price.toLocaleString('ko-KR')}원</td>
                                                 </tr>
                                                 <tr>
                                                     <th style="width: 12%;border-top: solid 1px #e6e8e8;">요청사항</th>
@@ -407,7 +407,7 @@ function approvalRequestTemplate(data) {
     </html>
   `;
 }
-*/
+/*
 // 대여요청 메일 템플릿
 function rentalRequestTemplate(data) {
 	return "rentalRequestTemplate / " + data.recipient.subject;
@@ -417,6 +417,7 @@ function rentalRequestTemplate(data) {
 function approvalRequestTemplate(data) {
 	return "approvalRequestTemplate / " + data.recipient.subject;
 }
+*/
 // 이메일 발송 엔드포인트
 router.post('/api/send-email', async (req, res) => {
   // #swagger.tags = ['Mail']
@@ -488,9 +489,7 @@ router.post('/api/send-email', async (req, res) => {
   };
 
   try {
-    //const info = await transporter.sendMail(mailOptions);
-		console.log('Template:' + htmlContent);
-    //console.log('Email sent: ' + info.response);
+    const info = await transporter.sendMail(mailOptions);
     res.status(200).send('Email sent successfully');
   } catch (error) {
     console.log(error);
