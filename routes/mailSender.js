@@ -14,8 +14,8 @@ const templates = {
     rentalRequest: (data) => rentalRequestTemplate(data),
     approvalRequest: (data) => approvalRequestTemplate(data)
 };
-
-// 승인요청 메일 템플릿
+/*
+// 대여요청 메일 템플릿
 function rentalRequestTemplate(data) {
     return `
       <html xmlns="http://www.w3.org/1999/xhtml">
@@ -407,7 +407,16 @@ function approvalRequestTemplate(data) {
     </html>
   `;
 }
+*/
+// 대여요청 메일 템플릿
+function rentalRequestTemplate(data) {
+	return "rentalRequestTemplate / " + data.recipient.subject;
+}
 
+// 승인요청 메일 템플릿
+function approvalRequestTemplate(data) {
+	return "approvalRequestTemplate / " + data.recipient.subject;
+}
 // 이메일 발송 엔드포인트
 router.post('/api/send-email', async (req, res) => {
   // #swagger.tags = ['Mail']
@@ -479,8 +488,9 @@ router.post('/api/send-email', async (req, res) => {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent: ' + info.response);
+    //const info = await transporter.sendMail(mailOptions);
+		console.log('Template:' + htmlContent);
+    //console.log('Email sent: ' + info.response);
     res.status(200).send('Email sent successfully');
   } catch (error) {
     console.log(error);

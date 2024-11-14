@@ -173,7 +173,7 @@ router.put('/api/approvals/:id', async (req, res) => {
   // #swagger.summary = '승인 / 반려 / 구매 등록'
   try {
     const { data, etc } = req.body.data;
-
+    console.log(data);
     const getValueByKey = (items, key) => {
       const item = items.find((item) => item.key === key);
       return item ? item.value : null;
