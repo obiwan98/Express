@@ -59,7 +59,7 @@ router.post('/api/users/signup', async (req, res) => {
     await user.save();
     res.status(200).send({ message: "회원가입이 성공하였습니다." });
   } catch (error) {
-    res.status(400).send({ errorCode: error.code, error: "회원가입이 실패하였습니다." });
+    res.status(400).send({ errorCode: error.code, message: "회원가입이 실패하였습니다." });
   }
 });
 
@@ -92,12 +92,12 @@ router.post('/api/users/login', async (req, res) => {
       .populate('group')
       .populate('role');
     if (!user) {
-      return res.status(400).send({ errorCode: error.code, error: "이메일 또는 패스워드가 틀렸습니다." });
+      return res.status(400).send({ message: "이메일 또는 패스워드가 틀렸습니다." });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).send({ errorCode: error.code, error: "이메일 또는 패스워드가 틀렸습니다." });
+      return res.status(400).send({ message: "이메일 또는 패스워드가 틀렸습니다." });
     }
 
     const token = jwt.sign(
@@ -113,7 +113,8 @@ router.post('/api/users/login', async (req, res) => {
     );
     res.status(200).send({ token, message: "로그인이 성공하였습니다." });
   } catch (error) {
-    res.status(500).send({ error: "로그인 시도 중 오류가 발생했습니다." });
+    console.log('error');
+    res.status(500).send({ message: "로그인 시도 중 오류가 발생했습니다." });
   }
 });
 
@@ -125,11 +126,11 @@ router.get('/api/users/me', auth, async (req, res) => {
       .populate('group')
       .populate('role');
     if (!user) {
-      return res.status(404).send({ error: "이메일 정보가 틀렸습니다." });
+      return res.status(404).send({ message: "이메일 정보가 틀렸습니다." });
     }
     res.status(200).send({user, message: "회원 정보 조회가 성공하였습니다."});
   } catch (error) {
-    res.status(500).send({ error: "회원 정보 조회 중 오류가 발생했습니다." });
+    res.status(500).send({ message: "회원 정보 조회 중 오류가 발생했습니다." });
   }
 });
 
@@ -140,7 +141,7 @@ router.get('/api/users/', auth, async (req, res) => {
     const users = await User.find().populate("group").populate("role");
     res.status(200).send({users, message: "회원 리스트 조회가 성공하였습니다."});
   } catch (error) {
-    res.status(500).send({ error: "회원 리스트 조회 중 오류가 발생했습니다." });
+    res.status(500).send({ message: "회원 리스트 조회 중 오류가 발생했습니다." });
   }
 });
 
@@ -153,11 +154,11 @@ router.get('/api/users/:id', auth, async (req, res) => {
       .populate('group')
       .populate('role');
     if (!user) {
-      return res.status(404).send({ error: "회원을 찾을 수 없습니다." });
+      return res.status(404).send({ message: "회원을 찾을 수 없습니다." });
     }
     res.status(200).send({user, message: "회원 정보 조회가 성공하였습니다."});
   } catch (error) {
-    res.status(500).send({ error: "회원 정보 조회 중 오류가 발생했습니다." });
+    res.status(500).send({ message: "회원 정보 조회 중 오류가 발생했습니다." });
   }
 });
 
@@ -188,7 +189,7 @@ router.put('/api/users/:id', auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).send({ error: "회원을 찾을 수 없습니다." });
+      return res.status(404).send({ message: "회원을 찾을 수 없습니다." });
     }
 
     user.role = role;
@@ -197,7 +198,7 @@ router.put('/api/users/:id', auth, async (req, res) => {
     await user.save();
     res.status(200).send({ message: "회원 정보 변경이 완료되었습니다." });
   } catch (error) {
-    res.status(400).send({ error: "회원 정보 변경이 실패하였습니다." });
+    res.status(400).send({ message: "회원 정보 변경이 실패하였습니다." });
   }
 });
 
@@ -207,11 +208,11 @@ router.delete('/api/users/:id', auth, async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) {
-      return res.status(404).send({ error: "회원을 찾을 수 없습니다." });
+      return res.status(404).send({ message: "회원을 찾을 수 없습니다." });
     }
     res.status(200).send({ message: "회원 정보 삭제가 성공하였습니다." });
   } catch (error) {
-    res.status(500).send({ error: "회원 정보 삭제 중 오류가 발생했습니다." });
+    res.status(500).send({ message: "회원 정보 삭제 중 오류가 발생했습니다." });
   }
 });
 
@@ -222,7 +223,7 @@ router.get('/api/roles', async (req, res) => {
     const roles = await Role.find();
     res.status(200).send({roles, message: "역할 목록 조회가 성공하였습니다."});
   } catch (error) {
-    res.status(500).send({ error: '역할 목록 조회 중 오류가 발생했습니다.' });
+    res.status(500).send({ message: '역할 목록 조회 중 오류가 발생했습니다.' });
   }
 });
 
@@ -233,7 +234,7 @@ router.get('/api/groups', async (req, res) => {
     const groups = await Group.find();
     res.status(200).send({groups, message: "그룹 목록 조회가 성공하였습니다."});
   } catch (error) {
-    res.status(500).send({ error: '그룹 목록 조회 중 오류가 발생했습니다.' });
+    res.status(500).send({ message: '그룹 목록 조회 중 오류가 발생했습니다.' });
   }
 });
 

@@ -39,6 +39,8 @@ const upload = multer({ storage: storage });
 
 //승인관리 리스트
 router.get('/api/approvals/list/:state', auth, async (req, res) => {
+  // #swagger.tags = ['Approvals']
+  // #swagger.summary = '승인관리 리스트'
   try {
     const approvals = await Approval.find({
       state: req.params.state,
@@ -50,7 +52,7 @@ router.get('/api/approvals/list/:state', auth, async (req, res) => {
       .populate('confirm.group')
       .populate('payment.user', 'email name password signupDate')
       .populate('payment.group')
-      .sort({ regdate: 1 });
+      .sort({ regdate: -1 });
 
     res.status(200).send(approvals);
   } catch (error) {
@@ -61,6 +63,8 @@ router.get('/api/approvals/list/:state', auth, async (req, res) => {
 
 //승인컬렉션 테스트 데이터 입력
 router.post('/api/approvals/test', async (req, res) => {
+  // #swagger.tags = ['Approvals']
+  // #swagger.summary = '승인컬렉션 테스트 데이터 입력'
   try {
     const user = await User.findOne({ email: 'yeol2011@cj.net' }).populate(
       'group'
@@ -104,6 +108,8 @@ router.post('/api/approvals/test', async (req, res) => {
 //승인관리(최슬범님)
 // 승인 요청(신규)
 router.post('/api/approvals/save', async (req, res) => {
+  // #swagger.tags = ['Approvals']
+  // #swagger.summary = '승인 요청(신규)'
   try {
     const { reqItems, etc } = req.body.data;
 
@@ -163,9 +169,10 @@ router.post('/api/approvals/save', async (req, res) => {
 
 // 승인 / 반려 / 구매 등록
 router.put('/api/approvals/:id', async (req, res) => {
+  // #swagger.tags = ['Approvals']
+  // #swagger.summary = '승인 / 반려 / 구매 등록'
   try {
     const { data, etc } = req.body.data;
-
     const getValueByKey = (items, key) => {
       const item = items.find((item) => item.key === key);
       return item ? item.value : null;
@@ -226,6 +233,8 @@ router.put('/api/approvals/:id', async (req, res) => {
 
 // 승인 삭제
 router.delete('/api/approvals/:id', async (req, res) => {
+  // #swagger.tags = ['Approvals']
+  // #swagger.summary = '승인 삭제'
   try {
     const approval = await Approval.findByIdAndDelete(req.params.id);
     if (!approval) {
@@ -240,6 +249,8 @@ router.delete('/api/approvals/:id', async (req, res) => {
 
 // 첨부파일 업로드
 router.post('/api/approvals/upload', upload.single('file'), (req, res) => {
+  // #swagger.tags = ['Approvals']
+  // #swagger.summary = '첨부파일 업로드'
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
